@@ -6,8 +6,6 @@
 .project
 .metadata
 bin/
-obj/
-ChessApp/
 tmp/
 *.tmp
 *.bak
