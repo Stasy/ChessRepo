@@ -38,6 +38,7 @@ namespace Chess
             BackgroundImage = Resources.background;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             
+
             //Create cellsPositions and Orders
             for (var i = 0; i < CellsCountInRow; i++)
             {
