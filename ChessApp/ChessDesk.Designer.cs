@@ -38,11 +38,13 @@
             this.Text = "ChessDesk";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ChessDesk_FormClosing);
             this.Load += new System.EventHandler(this.ChessDesk_Load);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ChessDesk_Paint);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
 
     }
 }
