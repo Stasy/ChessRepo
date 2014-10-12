@@ -166,4 +166,7 @@
   <data name="whiteQueen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\whiteQueen.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ImpossibleMoveMessage" xml:space="preserve">
+    <value>Эта фигура так ходить не может !!!</value>
+  </data>
 </root>
