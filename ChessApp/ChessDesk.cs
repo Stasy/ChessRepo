@@ -33,10 +33,66 @@ namespace Chess
             BackgroundImage = Resources.background;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             
+            //Create Cells and Orders
             CreateCells();
             AssigneCellsOrder();
-            CreateChessmans();
-            ChesmansInitialDisposition();
+
+            //Create Chessmans
+            string[] chessmansColors = {"black", "white"};
+            foreach (var color in chessmansColors)
+            {
+                Kings.Add(color + "King", new King(color));
+                Queens.Add(color + "Queen", new Queen(color));
+                
+                for (var chessmanIndex = 1; chessmanIndex <= 2; chessmanIndex++)
+                {
+                    Castles.Add(color + "Castle" + chessmanIndex, new Castle(color));
+                    Elephants.Add(color + "Elephant" + chessmanIndex, new Elephant(color));
+                    Horses.Add(color + "Horse" + chessmanIndex, new Horse(color));
+                }
+
+                for (var pawnIndex = 1; pawnIndex <= 8; pawnIndex++)
+                    Pawns.Add(color + "Pawn" + pawnIndex, new Pawn(color));
+            }
+
+            //Chessmans initial disposition
+            Castles["whiteCastle1"].Parent = Cells[7, 0];
+            Castles["whiteCastle2"].Parent = Cells[7, 7];
+            Castles["blackCastle1"].Parent = Cells[0, 0];
+            Castles["blackCastle2"].Parent = Cells[0, 7];
+
+            Horses["whiteHorse1"].Parent = Cells[7, 1];
+            Horses["whiteHorse2"].Parent = Cells[7, 6];
+            Horses["blackHorse1"].Parent = Cells[0, 1];
+            Horses["blackHorse2"].Parent = Cells[0, 6];
+
+            Elephants["whiteElephant1"].Parent = Cells[7, 2];
+            Elephants["whiteElephant2"].Parent = Cells[7, 5];
+            Elephants["blackElephant1"].Parent = Cells[0, 2];
+            Elephants["blackElephant2"].Parent = Cells[0, 5];
+
+            Queens["whiteQueen"].Parent = Cells[7, 3];
+            Queens["blackQueen"].Parent = Cells[0, 4];
+
+            Kings["whiteKing"].Parent = Cells[7, 4];
+            Kings["blackKing"].Parent = Cells[0, 3];
+
+            Pawns["whitePawn1"].Parent = Cells[6, 0];
+            Pawns["whitePawn2"].Parent = Cells[6, 1];
+            Pawns["whitePawn3"].Parent = Cells[6, 2];
+            Pawns["whitePawn4"].Parent = Cells[6, 3];
+            Pawns["whitePawn5"].Parent = Cells[6, 4];
+            Pawns["whitePawn6"].Parent = Cells[6, 5];
+            Pawns["whitePawn7"].Parent = Cells[6, 6];
+            Pawns["whitePawn8"].Parent = Cells[6, 7];
+            Pawns["blackPawn1"].Parent = Cells[1, 0];
+            Pawns["blackPawn2"].Parent = Cells[1, 1];
+            Pawns["blackPawn3"].Parent = Cells[1, 2];
+            Pawns["blackPawn4"].Parent = Cells[1, 3];
+            Pawns["blackPawn5"].Parent = Cells[1, 4];
+            Pawns["blackPawn6"].Parent = Cells[1, 5];
+            Pawns["blackPawn7"].Parent = Cells[1, 6];
+            Pawns["blackPawn8"].Parent = Cells[1, 7];
 
             ResumeLayout(true);
         }
@@ -132,72 +188,6 @@ namespace Chess
             {
                 Orders[i].Dispose();
             }
-        }
-
-        private void CreateChessmans()
-        {
-            string[] chessmansColors = { "black", "white" };
-            foreach (var color in chessmansColors)
-            {
-                Kings.Add(color + "King", new King(color));
-                Queens.Add(color + "Queen", new Queen(color));
-
-                for (var chessmanIndex = 1; chessmanIndex <= 2; chessmanIndex++)
-                {
-                    Castles.Add(color + "Castle" + chessmanIndex, new Castle(color));
-                    Elephants.Add(color + "Elephant" + chessmanIndex, new Elephant(color));
-                    Horses.Add(color + "Horse" + chessmanIndex, new Horse(color));
-                }
-
-                for (var pawnIndex = 1; pawnIndex <= 8; pawnIndex++)
-                    Pawns.Add(color + "Pawn" + pawnIndex, new Pawn(color));
-            }
-        }
-
-        private void ChesmansInitialDisposition()
-        {
-            Castles["whiteCastle1"].Parent = Cells[7, 0];
-            Castles["whiteCastle2"].Parent = Cells[7, 7];
-            Castles["blackCastle1"].Parent = Cells[0, 0];
-            Castles["blackCastle2"].Parent = Cells[0, 7];
-
-            Horses["whiteHorse1"].Parent = Cells[7, 1];
-            Horses["whiteHorse2"].Parent = Cells[7, 6];
-            Horses["blackHorse1"].Parent = Cells[0, 1];
-            Horses["blackHorse2"].Parent = Cells[0, 6];
-
-            Elephants["whiteElephant1"].Parent = Cells[7, 2];
-            Elephants["whiteElephant2"].Parent = Cells[7, 5];
-            Elephants["blackElephant1"].Parent = Cells[0, 2];
-            Elephants["blackElephant2"].Parent = Cells[0, 5];
-
-            Queens["whiteQueen"].Parent = Cells[7, 3];
-            Queens["blackQueen"].Parent = Cells[0, 4];
-
-            Kings["whiteKing"].Parent = Cells[7, 4];
-            Kings["blackKing"].Parent = Cells[0, 3];
-
-            Pawns["whitePawn1"].Parent = Cells[6, 0];
-            Pawns["whitePawn2"].Parent = Cells[6, 1];
-            Pawns["whitePawn3"].Parent = Cells[6, 2];
-            Pawns["whitePawn4"].Parent = Cells[6, 3];
-            Pawns["whitePawn5"].Parent = Cells[6, 4];
-            Pawns["whitePawn6"].Parent = Cells[6, 5];
-            Pawns["whitePawn7"].Parent = Cells[6, 6];
-            Pawns["whitePawn8"].Parent = Cells[6, 7];
-            Pawns["blackPawn1"].Parent = Cells[1, 0];
-            Pawns["blackPawn2"].Parent = Cells[1, 1];
-            Pawns["blackPawn3"].Parent = Cells[1, 2];
-            Pawns["blackPawn4"].Parent = Cells[1, 3];
-            Pawns["blackPawn5"].Parent = Cells[1, 4];
-            Pawns["blackPawn6"].Parent = Cells[1, 5];
-            Pawns["blackPawn7"].Parent = Cells[1, 6];
-            Pawns["blackPawn8"].Parent = Cells[1, 7];
-        }
-
-        private void pictureBox1_DoubleClick(object sender, EventArgs e)
-        {
-
         }
     }
 }
