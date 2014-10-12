@@ -161,7 +161,7 @@ namespace Chess.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Эта фигура так ходить не может !!!.
+        ///   Looks up a localized string similar to Вы попытались выполнить некорректный ход.
         /// </summary>
         internal static string ImpossibleMoveMessage {
             get {

@@ -255,17 +255,22 @@ namespace Chess
             var startPosition = initialChessmanLocation;
             var finishPosition = CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn];
 
+            var startX = (initialChessmanLocation.X - 27) / 50;
+            var startY = (initialChessmanLocation.Y - 27) / 50;
+            var finishX = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].X - 27) / 50;
+            var finishY = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].Y - 27) / 50;
+
             var impossibleMove = sender is Queen
-                ? Queen.CheckQueenMove(startPosition, finishPosition)
+                ? Queen.CheckQueenMove(startX, startY, finishX, finishY)
                 : sender is Castle
-                    ? Castle.CheckCastleMove(startPosition, finishPosition)
+                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY)
                     : sender is Elephant
-                        ? Elephant.CheckElephantMove(startPosition, finishPosition)
+                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY)
                         : sender is Horse
-                            ? Horse.CheckHorseMove(startPosition, finishPosition)
+                            ? Horse.CheckHorseMove(startX, startY, finishX, finishY)
                             : sender is King
-                                ? King.CheckKingMove(startPosition, finishPosition)
-                                : Pawn.CheckPawnMove(startPosition, finishPosition);
+                                ? King.CheckKingMove(startX, startY, finishX, finishY)
+                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY);
 
             if (impossibleMove)
             {

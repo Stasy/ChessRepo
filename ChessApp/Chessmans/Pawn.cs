@@ -13,9 +13,22 @@ namespace Chess.Chessmans
         {
         }
 
-        public static bool CheckPawnMove(Point queenStartPosition, Point queenFinishPosition)
+        public static bool CheckPawnMove(int startX, int startY, int finishX, int finishY)
         {
-            return true;
+            var result = false;
+            if (startY != finishY + 1)
+            {
+                result = true;
+            }
+            else
+            {
+                if (startX != finishX)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }

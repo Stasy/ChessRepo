@@ -14,9 +14,33 @@ namespace Chess.Chessmans
 
         }
 
-        public static bool CheckKingMove(Point queenStartPosition, Point queenFinishPosition)
+        public static bool CheckKingMove(int startX, int startY, int finishX, int finishY)
         {
-            return true;
+            var result = false;
+            if (startX != finishX)
+            {
+                if (startY != finishY)
+                {
+                    if (Math.Abs(startX - finishX) != 1 && Math.Abs(startY - finishY) != 1)
+                        result = true;
+                }
+                else
+                {
+                    if ((startX != finishX - 1 && startX != finishX + 1))
+                    {
+                        result = true;
+                    }
+                }
+            }
+            else
+            {
+                if (startY != finishY - 1 && startY != finishY + 1)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }

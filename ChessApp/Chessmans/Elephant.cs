@@ -14,9 +14,11 @@ namespace Chess.Chessmans
             
         }
 
-        public static bool CheckElephantMove(Point queenStartPosition, Point queenFinishPosition)
+        public static bool CheckElephantMove(int startX, int startY, int finishX, int finishY)
         {
-            return true;
+            bool result = Math.Abs(startX - finishX) != Math.Abs(startY - finishY);
+
+            return result;
         }
     }
 }

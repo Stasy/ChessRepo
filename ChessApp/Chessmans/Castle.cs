@@ -13,9 +13,18 @@ namespace Chess.Chessmans
         {
         }
 
-        public static bool CheckCastleMove(Point queenStartPosition, Point queenFinishPosition)
+        public static bool CheckCastleMove(int startX, int startY, int finishX, int finishY)
         {
-            return true;
+            var result = false;
+            if (startX != finishX)
+            {
+                if (startY != finishY)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
         }
     }
 }
