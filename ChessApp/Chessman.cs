@@ -168,9 +168,20 @@ namespace Chess
                 {
                     if (control is Chessman)
                     {
-                        if (control == "black")
+                        if (((Chessman) control).ChessColor == "white")
                         {
-                            
+                            result = true;
+                        }
+                        else
+                        {
+                            foreach (var ctrl in Controls)
+                            {
+                                var chessFinishLocation = new Point(Y*50 + 27, X*50 + 27);
+                                if (((Chessman) ctrl).Location == chessFinishLocation)
+                                {
+                                    Controls.Remove((Chessman)ctrl);
+                                }
+                            }
                         }
                     }
                 }
