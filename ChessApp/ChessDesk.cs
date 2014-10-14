@@ -297,16 +297,16 @@ namespace Chess
             var finishY = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].Y - 27) / 50;
 
             var impossibleMove = sender is Queen
-                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
+                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls)
                 : sender is Castle
-                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY)
+                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
                     : sender is Elephant
-                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY)
+                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
                         : sender is Horse
                             ? Horse.CheckHorseMove(startX, startY, finishX, finishY)
                             : sender is King
                                 ? King.CheckKingMove(startX, startY, finishX, finishY)
-                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY);
+                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY, (Pawn)sender);
 
             if (impossibleMove)
             {
@@ -317,8 +317,8 @@ namespace Chess
             }
             else
             {
-                ChessmanPresenceSign[startX, startY] = false;
-                ChessmanPresenceSign[finishX, finishY] = true;
+                ChessmanPresenceSign[startY, startX] = false;
+                ChessmanPresenceSign[finishY, finishX] = true;
             }
         }
 

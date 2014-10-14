@@ -46,7 +46,10 @@ namespace Chess
             BackColor = Color.Transparent;
             Location = new Point(2, 2);
             Size = new Size(46, 46);
+            ChessColor = color;
         }
+
+        public string ChessColor { get; set; }
 
         ~Chessman()
         {
@@ -65,14 +68,111 @@ namespace Chess
             return bmp;
         }
 
-        public static bool CheckJumpOverChessman(int start, int finish, bool[,] chessmanPresenceSign)
+        public static bool CheckJumpOverChessman(int startX, int startY, int finishX, int finishY,
+            bool[,] chessmanPresenceSign, string trajectorysType)
         {
             var result = false;
-            for (var i = Math.Min(start, finish); i <= Math.Max(start, finish) - 2; i++)
+
+            if (trajectorysType == "horizontal")
             {
-                if (chessmanPresenceSign[start, i])
+                result = CheckJumpOverChessmanForHorizontalTrajectory(startX, startY, finishX, finishY,
+                    chessmanPresenceSign);
+            }
+
+            if (trajectorysType == "vertical")
+            {
+                result = CheckJumpOverChessmanForVerticalTrajectory(startX, startY, finishX, finishY,
+                    chessmanPresenceSign);
+            }
+
+            if (trajectorysType == "diagonal")
+            {
+                result = CheckJumpOverChessmanForDiagonalTrajectory(startX, startY, finishX, finishY,
+                    chessmanPresenceSign);
+            }
+
+            return result;
+        }
+
+        private static bool CheckJumpOverChessmanForHorizontalTrajectory(int startX, int startY, int finishX,
+            int finishY, bool[,] chessmanPresenceSign)
+        {
+            var result = false;
+            for (var i = 1; i < Math.Abs(startX - finishX); i++)
+            {
+                if ((startX - finishX) > 0 && chessmanPresenceSign[startY, startX - i] ||
+                    (startX - finishX) < 0 && chessmanPresenceSign[startY, startX + i])
                 {
                     result = true;
+                }
+            }
+
+            return result;
+        }
+
+        private static bool CheckJumpOverChessmanForVerticalTrajectory(int startX, int startY, int finishX,
+            int finishY, bool[,] chessmanPresenceSign)
+        {
+            var result = false;
+            for (var i = 1; i < Math.Abs(startY - finishY); i++)
+            {
+                if ((startY - finishY) > 0 && chessmanPresenceSign[startY - i, startX] ||
+                    (startY - finishY) < 0 && chessmanPresenceSign[startY + i, startX])
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        private static bool CheckJumpOverChessmanForDiagonalTrajectory(int startX, int startY, int finishX,
+            int finishY, bool[,] chessmanPresenceSign)
+        {
+            var result = false;
+            if ((startX - finishX) == (startY - finishY))
+            {
+                //главная диагональ
+                for (var i = 1; i < Math.Abs(startX - finishX); i++)
+                {
+                    if ((startX - finishX) > 0 && chessmanPresenceSign[startY - i, startX - i] ||
+                        (startX - finishX) < 0 && chessmanPresenceSign[startY + i, startX + i])
+                    {
+                        result = true;
+                    }
+                }
+            }
+            else
+            {
+                //побочная диагональ
+                for (var i = 1; i < Math.Abs(startX - finishX); i++)
+                {
+                    if ((startX - finishX) > 0 && chessmanPresenceSign[startY + i, startX - i] ||
+                        (startX - finishX) < 0 && chessmanPresenceSign[startY - i, startX + i])
+                    {
+                        result = true;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public static bool CheckFreeFinishCell(int X, int Y, bool[,] chessmanPresenceSign, ControlCollection Controls)
+        {
+            var result = false;
+
+            if (chessmanPresenceSign[Y, X])
+            {
+                foreach (var control in Controls)
+                {
+                    if (control is Chessman)
+                    {
+                        if (control == "black")
+                        {
+                            
+                        }
+                    }
                 }
             }
 

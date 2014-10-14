@@ -11,7 +11,6 @@ namespace Chess.Chessmans
     {
         public Horse(string color) : base(color, "Horse")
         {
-            
         }
 
         public static bool CheckHorseMove(int startX, int startY, int finishX, int finishY)

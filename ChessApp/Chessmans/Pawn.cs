@@ -13,10 +13,12 @@ namespace Chess.Chessmans
         {
         }
 
-        public static bool CheckPawnMove(int startX, int startY, int finishX, int finishY)
+        public static bool CheckPawnMove(int startX, int startY, int finishX, int finishY, Pawn pawn)
         {
             var result = false;
-            if (startY != finishY + 1)
+
+            if (pawn.ChessColor == "white" && startY != finishY + 1
+                || pawn.ChessColor == "black" && startY != finishY - 1)
             {
                 result = true;
             }

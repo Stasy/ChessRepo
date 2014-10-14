@@ -13,9 +13,12 @@ namespace Chess.Chessmans
             int startY,
             int finishX,
             int finishY,
-            bool[,] chessmanPresenceSign)
+            bool[,] chessmanPresenceSign,
+            ControlCollection controls)
         {
             var result = false;
+
+            //Общие правила хода
             if (startX != finishX)
             {
                 if (startY != finishY)
@@ -24,12 +27,23 @@ namespace Chess.Chessmans
                     {
                         result = true;
                     }
+                    else
+                    {
+                        result = CheckJumpOverChessman(startX, startY, finishX, finishY, chessmanPresenceSign, "diagonal");
+                    }
+                }
+                else
+                {
+                    result = CheckJumpOverChessman(startX, startY, finishX, finishY, chessmanPresenceSign, "horizontal");
                 }
             }
             else
             {
-                result = CheckJumpOverChessman(startY, finishY, chessmanPresenceSign);
+                result = CheckJumpOverChessman(startX, startY, finishX, finishY, chessmanPresenceSign, "vertical");
             }
+
+            //Проверяем наличие шахматы в конечной ячейке
+            CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls);
 
             return result;
         }

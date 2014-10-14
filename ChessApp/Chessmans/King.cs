@@ -11,7 +11,6 @@ namespace Chess.Chessmans
     {
         public King(string color) : base(color, "King")
         {
-
         }
 
         public static bool CheckKingMove(int startX, int startY, int finishX, int finishY)
