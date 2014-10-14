@@ -13,6 +13,7 @@ namespace Chess
     {
         private const int CellsCountInRow = 8;
         public Point[,] CellsPositions = new Point[CellsCountInRow, CellsCountInRow];
+        public bool[,] ChessmanPresenceSign = new bool[8, 8];
         public Label[] Orders = new Label[CellsCountInRow*2];
 
         public Dictionary<string, Castle> Castles = new Dictionary<string, Castle>();
@@ -49,6 +50,8 @@ namespace Chess
                 {
                     CellsPositions[i, j].X = j*50 + 27;
                     CellsPositions[i, j].Y = i*50 + 27;
+
+                    ChessmanPresenceSign[i, j] = false;
                 }
             }
             AssigneCellsOrder();
@@ -94,44 +97,7 @@ namespace Chess
                 }
             }
 
-            //Chessmans initial disposition
-            Castles["whiteCastle1"].Location = CellsPositions[7, 0];
-            Castles["whiteCastle2"].Location = CellsPositions[7, 7];
-            Castles["blackCastle1"].Location = CellsPositions[0, 0];
-            Castles["blackCastle2"].Location = CellsPositions[0, 7];
-
-            Horses["whiteHorse1"].Location = CellsPositions[7, 1];
-            Horses["whiteHorse2"].Location = CellsPositions[7, 6];
-            Horses["blackHorse1"].Location = CellsPositions[0, 1];
-            Horses["blackHorse2"].Location = CellsPositions[0, 6];
-
-            Elephants["whiteElephant1"].Location = CellsPositions[7, 2];
-            Elephants["whiteElephant2"].Location = CellsPositions[7, 5];
-            Elephants["blackElephant1"].Location = CellsPositions[0, 2];
-            Elephants["blackElephant2"].Location = CellsPositions[0, 5];
-
-            Queens["whiteQueen"].Location = CellsPositions[7, 3];
-            Queens["blackQueen"].Location = CellsPositions[0, 4];
-
-            Kings["whiteKing"].Location = CellsPositions[7, 4];
-            Kings["blackKing"].Location = CellsPositions[0, 3];
-
-            Pawns["whitePawn1"].Location = CellsPositions[6, 0];
-            Pawns["whitePawn2"].Location = CellsPositions[6, 1];
-            Pawns["whitePawn3"].Location = CellsPositions[6, 2];
-            Pawns["whitePawn4"].Location = CellsPositions[6, 3];
-            Pawns["whitePawn5"].Location = CellsPositions[6, 4];
-            Pawns["whitePawn6"].Location = CellsPositions[6, 5];
-            Pawns["whitePawn7"].Location = CellsPositions[6, 6];
-            Pawns["whitePawn8"].Location = CellsPositions[6, 7];
-            Pawns["blackPawn1"].Location = CellsPositions[1, 0];
-            Pawns["blackPawn2"].Location = CellsPositions[1, 1];
-            Pawns["blackPawn3"].Location = CellsPositions[1, 2];
-            Pawns["blackPawn4"].Location = CellsPositions[1, 3];
-            Pawns["blackPawn5"].Location = CellsPositions[1, 4];
-            Pawns["blackPawn6"].Location = CellsPositions[1, 5];
-            Pawns["blackPawn7"].Location = CellsPositions[1, 6];
-            Pawns["blackPawn8"].Location = CellsPositions[1, 7];
+            ChassmansInitialDisposition();
 
             ResumeLayout(true);
         }
@@ -250,18 +216,88 @@ namespace Chess
             }
         }
 
+        private void ChassmansInitialDisposition()
+        {
+            Castles["whiteCastle1"].Location = CellsPositions[7, 0];
+            ChessmanPresenceSign[7, 0] = true;
+            Castles["whiteCastle2"].Location = CellsPositions[7, 7];
+            ChessmanPresenceSign[7, 7] = true;
+            Castles["blackCastle1"].Location = CellsPositions[0, 0];
+            ChessmanPresenceSign[0, 0] = true;
+            Castles["blackCastle2"].Location = CellsPositions[0, 7];
+            ChessmanPresenceSign[0, 7] = true;
+
+            Horses["whiteHorse1"].Location = CellsPositions[7, 1];
+            ChessmanPresenceSign[7, 1] = true;
+            Horses["whiteHorse2"].Location = CellsPositions[7, 6];
+            ChessmanPresenceSign[7, 6] = true;
+            Horses["blackHorse1"].Location = CellsPositions[0, 1];
+            ChessmanPresenceSign[0, 1] = true;
+            Horses["blackHorse2"].Location = CellsPositions[0, 6];
+            ChessmanPresenceSign[0, 6] = true;
+
+            Elephants["whiteElephant1"].Location = CellsPositions[7, 2];
+            ChessmanPresenceSign[7, 2] = true;
+            Elephants["whiteElephant2"].Location = CellsPositions[7, 5];
+            ChessmanPresenceSign[7, 5] = true;
+            Elephants["blackElephant1"].Location = CellsPositions[0, 2];
+            ChessmanPresenceSign[0, 2] = true;
+            Elephants["blackElephant2"].Location = CellsPositions[0, 5];
+            ChessmanPresenceSign[0, 5] = true;
+
+            Queens["whiteQueen"].Location = CellsPositions[7, 3];
+            ChessmanPresenceSign[7, 3] = true;
+            Queens["blackQueen"].Location = CellsPositions[0, 4];
+            ChessmanPresenceSign[0, 4] = true;
+
+            Kings["whiteKing"].Location = CellsPositions[7, 4];
+            ChessmanPresenceSign[7, 4] = true;
+            Kings["blackKing"].Location = CellsPositions[0, 3];
+            ChessmanPresenceSign[0, 3] = true;
+
+            Pawns["whitePawn1"].Location = CellsPositions[6, 0];
+            ChessmanPresenceSign[6, 0] = true;
+            Pawns["whitePawn2"].Location = CellsPositions[6, 1];
+            ChessmanPresenceSign[6, 1] = true;
+            Pawns["whitePawn3"].Location = CellsPositions[6, 2];
+            ChessmanPresenceSign[6, 2] = true;
+            Pawns["whitePawn4"].Location = CellsPositions[6, 3];
+            ChessmanPresenceSign[6, 3] = true;
+            Pawns["whitePawn5"].Location = CellsPositions[6, 4];
+            ChessmanPresenceSign[6, 4] = true;
+            Pawns["whitePawn6"].Location = CellsPositions[6, 5];
+            ChessmanPresenceSign[6, 5] = true;
+            Pawns["whitePawn7"].Location = CellsPositions[6, 6];
+            ChessmanPresenceSign[6, 6] = true;
+            Pawns["whitePawn8"].Location = CellsPositions[6, 7];
+            ChessmanPresenceSign[6, 7] = true;
+            Pawns["blackPawn1"].Location = CellsPositions[1, 0];
+            ChessmanPresenceSign[1, 0] = true;
+            Pawns["blackPawn2"].Location = CellsPositions[1, 1];
+            ChessmanPresenceSign[1, 1] = true;
+            Pawns["blackPawn3"].Location = CellsPositions[1, 2];
+            ChessmanPresenceSign[1, 2] = true;
+            Pawns["blackPawn4"].Location = CellsPositions[1, 3];
+            ChessmanPresenceSign[1, 3] = true;
+            Pawns["blackPawn5"].Location = CellsPositions[1, 4];
+            ChessmanPresenceSign[1, 4] = true;
+            Pawns["blackPawn6"].Location = CellsPositions[1, 5];
+            ChessmanPresenceSign[1, 5] = true;
+            Pawns["blackPawn7"].Location = CellsPositions[1, 6];
+            ChessmanPresenceSign[1, 6] = true;
+            Pawns["blackPawn8"].Location = CellsPositions[1, 7];
+            ChessmanPresenceSign[1, 7] = true;
+        }
+
         private void CheckChessMove(object sender)
         {
-            var startPosition = initialChessmanLocation;
-            var finishPosition = CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn];
-
             var startX = (initialChessmanLocation.X - 27) / 50;
             var startY = (initialChessmanLocation.Y - 27) / 50;
             var finishX = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].X - 27) / 50;
             var finishY = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].Y - 27) / 50;
 
             var impossibleMove = sender is Queen
-                ? Queen.CheckQueenMove(startX, startY, finishX, finishY)
+                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
                 : sender is Castle
                     ? Castle.CheckCastleMove(startX, startY, finishX, finishY)
                     : sender is Elephant
@@ -278,6 +314,11 @@ namespace Chess
 
                 chess = (Chessman) sender;
                 chess.Location = initialChessmanLocation;
+            }
+            else
+            {
+                ChessmanPresenceSign[startX, startY] = false;
+                ChessmanPresenceSign[finishX, finishY] = true;
             }
         }
 

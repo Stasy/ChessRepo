@@ -9,7 +9,11 @@ namespace Chess.Chessmans
         {
         }
 
-        public static bool CheckQueenMove(int startX, int startY, int finishX, int finishY)
+        public static bool CheckQueenMove(int startX,
+            int startY,
+            int finishX,
+            int finishY,
+            bool[,] chessmanPresenceSign)
         {
             var result = false;
             if (startX != finishX)
@@ -21,6 +25,10 @@ namespace Chess.Chessmans
                         result = true;
                     }
                 }
+            }
+            else
+            {
+                result = CheckJumpOverChessman(startY, finishY, chessmanPresenceSign);
             }
 
             return result;

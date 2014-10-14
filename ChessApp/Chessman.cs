@@ -64,5 +64,19 @@ namespace Chess
             }
             return bmp;
         }
+
+        public static bool CheckJumpOverChessman(int start, int finish, bool[,] chessmanPresenceSign)
+        {
+            var result = false;
+            for (var i = Math.Min(start, finish); i <= Math.Max(start, finish) - 2; i++)
+            {
+                if (chessmanPresenceSign[start, i])
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
     }
 }
