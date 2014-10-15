@@ -22,6 +22,7 @@ namespace Chess.Chessmans
             ControlCollection controls,
             object sender)
         {
+            //Общие правила хода
             var result = false;
             if (Math.Abs(startX - finishX) != Math.Abs(startY - finishY))
             {

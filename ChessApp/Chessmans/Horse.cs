@@ -21,6 +21,7 @@ namespace Chess.Chessmans
             ControlCollection controls,
             object sender)
         {
+            //Общие правила хода
             var result = false;
             if (startX != finishX + 2 && startX != finishX - 2)
             {
