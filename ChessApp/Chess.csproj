@@ -51,10 +51,10 @@
     <ApplicationIcon>blackQueen.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>B63B92639763DF037E4CF34D3E34BEC376841E60</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>190E0C3CB62AADCFF2395E0DAF362345875E8C9F</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Chess_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Chess_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -126,6 +126,7 @@
     <EmbeddedResource Include="SplashScreen.resx">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Chess_2_TemporaryKey.pfx" />
     <None Include="Chess_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
