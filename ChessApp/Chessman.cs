@@ -47,9 +47,11 @@ namespace Chess
             Location = new Point(2, 2);
             Size = new Size(46, 46);
             ChessColor = color;
+            FirstMove = true;
         }
 
         public string ChessColor { get; set; }
+        public bool FirstMove { get; set; }
 
         ~Chessman()
         {
@@ -158,8 +160,9 @@ namespace Chess
             return result;
         }
 
-        public static bool CheckFreeFinishCell(int X, int Y, bool[,] chessmanPresenceSign, ControlCollection Controls, object sender, bool result)
+        public static bool CheckFreeFinishCell(int X, int Y, bool[,] chessmanPresenceSign, ControlCollection Controls, object sender)
         {
+            var result = false;
             foreach (var control in Controls)
             {
                 if (control is Chessman)

@@ -24,21 +24,67 @@ namespace Chess.Chessmans
             //Общие правила хода
             var result = false;
 
-            if (((Chessman)sender).ChessColor == "white" && startY != finishY + 1
-                || ((Chessman)sender).ChessColor == "black" && startY != finishY - 1)
+            if (((Chessman) sender).FirstMove)
             {
-                result = true;
+                if (((Chessman)sender).ChessColor == "white" && (startY != finishY + 1 && startY != finishY + 2)
+                    || ((Chessman)sender).ChessColor == "black" && (startY != finishY - 1 && startY != finishY - 2))
+                {
+                    result = true;
+                }
+                else
+                {
+                    if (startX != finishX)
+                    {
+                        if (startY == finishY + 2 || startY == finishY - 2 ||
+                            !chessmanPresenceSign[finishY, finishX] || Math.Abs(startX - finishX) > 1)
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+                        if (chessmanPresenceSign[finishY, finishX])
+                        {
+                            result = true;
+                        }
+                        else
+                        {
+                            ((Chessman)sender).FirstMove = false;
+                        }
+                    }
+                }
             }
             else
             {
-                if (startX != finishX)
+                if (((Chessman)sender).ChessColor == "white" && startY != finishY + 1
+                    || ((Chessman)sender).ChessColor == "black" && startY != finishY - 1)
                 {
                     result = true;
+                }
+                else
+                {
+                    if (startX != finishX)
+                    {
+                        if (!chessmanPresenceSign[finishY, finishX] || Math.Abs(startX - finishX) > 1)
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+                        if (chessmanPresenceSign[finishY, finishX])
+                        {
+                            result = true;
+                        }
+                    }
                 }
             }
 
             //Проверяем наличие шахматы в конечной ячейке
-            result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender, result);
+            if (result == false)
+            {
+                result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
+            }
 
             return result;
         }

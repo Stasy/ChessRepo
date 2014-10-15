@@ -34,7 +34,10 @@ namespace Chess.Chessmans
             }
 
             //Проверяем наличие шахматы в конечной ячейке
-            result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender, result);
+            if (result == false)
+            {
+                result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
+            }
 
             return result;
         }
