@@ -13,12 +13,18 @@ namespace Chess.Chessmans
         {
         }
 
-        public static bool CheckPawnMove(int startX, int startY, int finishX, int finishY, Pawn pawn)
+        public static bool CheckPawnMove(int startX, 
+            int startY, 
+            int finishX, 
+            int finishY,
+            bool[,] chessmanPresenceSign,
+            ControlCollection controls,
+            object sender)
         {
             var result = false;
 
-            if (pawn.ChessColor == "white" && startY != finishY + 1
-                || pawn.ChessColor == "black" && startY != finishY - 1)
+            if (((Chessman)sender).ChessColor == "white" && startY != finishY + 1
+                || ((Chessman)sender).ChessColor == "black" && startY != finishY - 1)
             {
                 result = true;
             }
@@ -29,6 +35,9 @@ namespace Chess.Chessmans
                     result = true;
                 }
             }
+
+            //Проверяем наличие шахматы в конечной ячейке
+            result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender, result);
 
             return result;
         }

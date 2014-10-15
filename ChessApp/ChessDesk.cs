@@ -299,14 +299,14 @@ namespace Chess
             var impossibleMove = sender is Queen
                 ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
                 : sender is Castle
-                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
+                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
                     : sender is Elephant
-                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
+                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
                         : sender is Horse
-                            ? Horse.CheckHorseMove(startX, startY, finishX, finishY)
+                            ? Horse.CheckHorseMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
                             : sender is King
-                                ? King.CheckKingMove(startX, startY, finishX, finishY)
-                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY, (Pawn)sender);
+                                ? King.CheckKingMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
+                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender);
 
             if (impossibleMove)
             {

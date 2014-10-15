@@ -18,7 +18,9 @@ namespace Chess.Chessmans
             int startY,
             int finishX,
             int finishY,
-            bool[,] chessmanPresenceSign)
+            bool[,] chessmanPresenceSign,
+            ControlCollection controls,
+            object sender)
         {
             var result = false;
             if (Math.Abs(startX - finishX) != Math.Abs(startY - finishY))
@@ -29,6 +31,9 @@ namespace Chess.Chessmans
             {
                 result = CheckJumpOverChessman(startX, startY, finishX, finishY, chessmanPresenceSign, "diagonal");
             }
+
+            //Проверяем наличие шахматы в конечной ячейке
+            result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender, result);
 
             return result;
         }

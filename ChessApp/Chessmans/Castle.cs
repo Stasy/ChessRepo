@@ -13,7 +13,13 @@ namespace Chess.Chessmans
         {
         }
 
-        public static bool CheckCastleMove(int startX, int startY, int finishX, int finishY, bool[,] ChessmanPresenceSign)
+        public static bool CheckCastleMove(int startX, 
+            int startY, 
+            int finishX, 
+            int finishY, 
+            bool[,] ChessmanPresenceSign, 
+            ControlCollection controls,
+            object sender)
         {
             var result = false;
             if (startX != finishX)
@@ -31,6 +37,9 @@ namespace Chess.Chessmans
             {
                 result = CheckJumpOverChessman(startX, startY, finishX, finishY, ChessmanPresenceSign, "vertical");
             }
+
+            //Проверяем наличие шахматы в конечной ячейке
+            result = CheckFreeFinishCell(finishX, finishY, ChessmanPresenceSign, controls, sender, result);
 
             return result;
         }
