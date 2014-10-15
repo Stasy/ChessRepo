@@ -297,7 +297,7 @@ namespace Chess
             var finishY = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].Y - 27) / 50;
 
             var impossibleMove = sender is Queen
-                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls)
+                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
                 : sender is Castle
                     ? Castle.CheckCastleMove(startX, startY, finishX, finishY, ChessmanPresenceSign)
                     : sender is Elephant

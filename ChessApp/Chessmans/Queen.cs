@@ -14,7 +14,8 @@ namespace Chess.Chessmans
             int finishX,
             int finishY,
             bool[,] chessmanPresenceSign,
-            ControlCollection controls)
+            ControlCollection controls,
+            object sender)
         {
             var result = false;
 
@@ -43,7 +44,7 @@ namespace Chess.Chessmans
             }
 
             //Проверяем наличие шахматы в конечной ячейке
-            CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls);
+            result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender, result);
 
             return result;
         }

@@ -158,29 +158,26 @@ namespace Chess
             return result;
         }
 
-        public static bool CheckFreeFinishCell(int X, int Y, bool[,] chessmanPresenceSign, ControlCollection Controls)
+        public static bool CheckFreeFinishCell(int X, int Y, bool[,] chessmanPresenceSign, ControlCollection Controls, object sender, bool result)
         {
-            var result = false;
-
-            if (chessmanPresenceSign[Y, X])
+            foreach (var control in Controls)
             {
-                foreach (var control in Controls)
+                if (control is Chessman)
                 {
-                    if (control is Chessman)
+                    var chessFinishLocation = new Point(X * 50 + 27, Y * 50 + 27);
+
+                    if (((Chessman)control).Location == chessFinishLocation)
                     {
-                        if (((Chessman) control).ChessColor == "white")
+                        if (((Chessman) control).ChessColor == ((Chessman) sender).ChessColor &&
+                            control != sender)
                         {
                             result = true;
                         }
                         else
                         {
-                            foreach (var ctrl in Controls)
+                            if(control != sender)
                             {
-                                var chessFinishLocation = new Point(Y*50 + 27, X*50 + 27);
-                                if (((Chessman) ctrl).Location == chessFinishLocation)
-                                {
-                                    Controls.Remove((Chessman)ctrl);
-                                }
+                                Controls.Remove((Chessman) control);
                             }
                         }
                     }
