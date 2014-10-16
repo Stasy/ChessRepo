@@ -169,4 +169,7 @@
   <data name="ImpossibleMoveMessage" xml:space="preserve">
     <value>Вы попытались выполнить некорректный ход</value>
   </data>
+  <data name="moveOrderMessageError" xml:space="preserve">
+    <value>Сейчас очередь хода вашего соперника</value>
+  </data>
 </root>

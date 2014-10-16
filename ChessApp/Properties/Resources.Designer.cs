@@ -170,6 +170,15 @@ namespace Chess.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Сейчас очередь хода вашего соперника.
+        /// </summary>
+        internal static string moveOrderMessageError {
+            get {
+                return ResourceManager.GetString("moveOrderMessageError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon whiteCastle {

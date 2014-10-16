@@ -12,9 +12,11 @@ namespace Chess.Chessmans
         public Pawn(string color) : base(color, "Pawn")
         {
             FirstJump = "canJump";
+            MoveOrderNumber = 0;
         }
 
         private string FirstJump { get; set; }
+        private int MoveOrderNumber { get; set; }
 
         public static bool CheckPawnMove(int startX, 
             int startY, 
@@ -22,7 +24,8 @@ namespace Chess.Chessmans
             int finishY,
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
-            object sender)
+            object sender,
+            Dictionary<string, int> moveOrder)
         {
             //Общие правила хода
             var result = false;
@@ -53,9 +56,16 @@ namespace Chess.Chessmans
                         }
                         else
                         {
-                            if (((Chessman) sender).FirstMove && (startY != finishY + 2 || startY != finishY - 2))
+                            if (((Chessman) sender).FirstMove && (startY == finishY + 2 || startY == finishY - 2))
                             {
                                 ((Pawn) sender).FirstJump = "firstJump";
+                                foreach (var control in controls)
+                                {
+                                    if (control is Pawn)
+                                    {
+                                        ((Pawn)control).MoveOrderNumber = moveOrder[((Pawn)sender).ChessColor];
+                                    } 
+                                }
                             }
                             else
                             {
@@ -98,12 +108,15 @@ namespace Chess.Chessmans
                                                 ((Pawn) control).Location == pointForWhiteVictim &&
                                                 ((Chessman) sender).ChessColor == "black")
                                             {
-                                                needCheckFreeFinishCell = false;
-                                                controls.Remove((Chessman) control);
-                                            }
-                                            else
-                                            {
-                                                result = true;
+                                                if (moveOrder.Values.Min() == ((Pawn) sender).MoveOrderNumber - 2)
+                                                {
+                                                    needCheckFreeFinishCell = false;
+                                                    controls.Remove((Chessman) control);
+                                                }
+                                                else
+                                                {
+                                                    result = true;
+                                                }
                                             }
                                         }
                                     }

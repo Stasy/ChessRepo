@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Chess.Chessmans;
@@ -28,6 +29,8 @@ namespace Chess
         private Point initialChessmanLocation;
         private Chessman chess;
         private int chessmansCellIndexColumn, chessmansCellIndexRow;
+
+        private Dictionary<string, int> moveOrder = new Dictionary<string, int>();
 
         public ChessDesk()
         {
@@ -99,6 +102,10 @@ namespace Chess
 
             ChassmansInitialDisposition();
 
+            //Set default move order
+            moveOrder.Add("white", 1);
+            moveOrder.Add("black", 0);
+
             ResumeLayout(true);
         }
 
@@ -138,8 +145,17 @@ namespace Chess
             }
             chess.Location = CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn];
 
-            //Метод проверки хода
-            CheckChessMove(chess);
+            //Проверка очередности хода
+            if (moveOrder[((Chessman) sender).ChessColor] == moveOrder.Values.Max())
+            {
+                //Проверка логики хода
+                CheckChessMove(chess);
+            }
+            else
+            {
+                MessageBox.Show(Resources.moveOrderMessageError);
+                ((Chessman) sender).Location = initialChessmanLocation;
+            }
         }
 
         private void Chessman_MouseMove(object sender, MouseEventArgs e)
@@ -306,7 +322,7 @@ namespace Chess
                             ? Horse.CheckHorseMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
                             : sender is King
                                 ? King.CheckKingMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
-                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender);
+                                : Pawn.CheckPawnMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, moveOrder);
 
             if (impossibleMove)
             {
@@ -319,6 +335,8 @@ namespace Chess
             {
                 ChessmanPresenceSign[startY, startX] = false;
                 ChessmanPresenceSign[finishY, finishX] = true;
+
+                moveOrder[((Chessman) sender).ChessColor] += -2;
             }
         }
 
