@@ -11,7 +11,10 @@ namespace Chess.Chessmans
     {
         public Pawn(string color) : base(color, "Pawn")
         {
+            FirstJump = "canJump";
         }
+
+        private string FirstJump { get; set; }
 
         public static bool CheckPawnMove(int startX, 
             int startY, 
@@ -23,6 +26,7 @@ namespace Chess.Chessmans
         {
             //Общие правила хода
             var result = false;
+            var needCheckFreeFinishCell = true;
 
             if (((Chessman) sender).FirstMove)
             {
@@ -49,7 +53,14 @@ namespace Chess.Chessmans
                         }
                         else
                         {
-                            ((Chessman)sender).FirstMove = false;
+                            if (((Chessman) sender).FirstMove && (startY != finishY + 2 || startY != finishY - 2))
+                            {
+                                ((Pawn) sender).FirstJump = "firstJump";
+                            }
+                            else
+                            {
+                                ((Pawn) sender).FirstJump = "cantJump";
+                            }
                         }
                     }
                 }
@@ -65,9 +76,39 @@ namespace Chess.Chessmans
                 {
                     if (startX != finishX)
                     {
-                        if (!chessmanPresenceSign[finishY, finishX] || Math.Abs(startX - finishX) > 1)
+                        if (Math.Abs(startX - finishX) > 1)
                         {
                             result = true;
+                        }
+                        else
+                        {
+                            if (!chessmanPresenceSign[finishY, finishX])
+                            {
+                                //Проверяем "убийство на проходе"
+                                foreach (var control in controls)
+                                {
+                                    if (control is Pawn)
+                                    {
+                                        if (((Pawn)control).ChessColor != ((Chessman)sender).ChessColor && ((Pawn)control).FirstJump == "firstJump")
+                                        {
+                                            var pointForBlackVictim = new Point(finishX * 50 + 27, (finishY + 1) * 50 + 27);
+                                            var pointForWhiteVictim = new Point(finishX * 50 + 27, (finishY - 1) * 50 + 27);
+                                            if (((Pawn) control).Location == pointForBlackVictim &&
+                                                ((Chessman) sender).ChessColor == "white" ||
+                                                ((Pawn) control).Location == pointForWhiteVictim &&
+                                                ((Chessman) sender).ChessColor == "black")
+                                            {
+                                                needCheckFreeFinishCell = false;
+                                                controls.Remove((Chessman) control);
+                                            }
+                                            else
+                                            {
+                                                result = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     else
@@ -83,7 +124,26 @@ namespace Chess.Chessmans
             //Проверяем наличие шахматы в конечной ячейке
             if (result == false)
             {
-                result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
+                if (needCheckFreeFinishCell)
+                {
+                    result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
+                }
+
+                //Проверка первого хода
+                if (!result)
+                {
+                    if (((Chessman)sender).FirstMove)
+                    {
+                        ((Chessman)sender).FirstMove = false;
+                    }
+                    else
+                    {
+                        if (((Pawn)sender).FirstJump == "firstJump")
+                        {
+                            ((Pawn)sender).FirstJump = "cantJump";
+                        }
+                    }
+                }
             }
 
             return result;
