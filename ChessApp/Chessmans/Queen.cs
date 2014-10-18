@@ -49,6 +49,10 @@ namespace Chess.Chessmans
                 result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
             }
 
+            //Проверка хода а месте
+            if (startX == finishX && startY == finishY)
+                result = true;
+
             return result;
         }
     }
