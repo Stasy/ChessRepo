@@ -13,10 +13,12 @@ namespace Chess.Chessmans
         {
             FirstJump = "canJump";
             MoveOrderNumber = 0;
+            CanTransform = false;
         }
 
         private string FirstJump { get; set; }
         private int MoveOrderNumber { get; set; }
+        public bool CanTransform { get; set; }
 
         public static bool CheckPawnMove(int startX, 
             int startY, 
@@ -158,6 +160,13 @@ namespace Chess.Chessmans
                     }
                 }
             }
+
+            //Признак возможности превращения пешки
+            if (((Pawn)sender).ChessColor == "white" && finishY == 0 ||
+                     ((Pawn)sender).ChessColor == "black" && finishY == 7)
+                {
+                    ((Pawn) sender).CanTransform = true;
+                }
 
             return result;
         }

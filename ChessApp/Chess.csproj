@@ -99,6 +99,12 @@
     <Compile Include="Chessmans\Pawn.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PawnTransfomDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PawnTransfomDialog.Designer.cs">
+      <DependentUpon>PawnTransfomDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Chessmans\Queen.cs">
@@ -117,6 +123,9 @@
     </Compile>
     <EmbeddedResource Include="ChessDesk.resx">
       <DependentUpon>ChessDesk.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PawnTransfomDialog.resx">
+      <DependentUpon>PawnTransfomDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

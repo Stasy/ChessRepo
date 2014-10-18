@@ -337,6 +337,77 @@ namespace Chess
                 ChessmanPresenceSign[finishY, finishX] = true;
 
                 moveOrder[((Chessman) sender).ChessColor] += -2;
+
+                //Проверка возможности превращения
+                if (sender is Pawn)
+                {
+                    if (((Pawn) sender).CanTransform)
+                    {
+                        var dialogWindow = new PawnTransfomDialog();
+                        dialogWindow.Owner = this;
+
+                        DialogResult dialogResult = dialogWindow.ShowDialog();
+                        if (dialogResult == DialogResult.OK && !dialogWindow.RBPawn.Checked)
+                        {
+                            var color = ((Pawn) sender).ChessColor;
+                            var finishPoint = new Point(finishX * 50 + 27, finishY * 50 + 27);
+
+                            ((Pawn)sender).Dispose();
+
+                            if (dialogWindow.RBCastle.Checked)
+                            {
+                                var index = Castles.Count + 1;
+                                Castles.Add(color + "Castel" + index, new Castle(color));
+                                Controls.Add(Castles[color + "Castel" + index]);
+                                Castles[color + "Castel" + index].Location = finishPoint;
+
+                                Castles[color + "Castel" + index].MouseLeave += Chessman_MouseLeave;
+                                Castles[color + "Castel" + index].MouseDown += Chessman_MouseDown;
+                                Castles[color + "Castel" + index].MouseUp += Chessman_MouseUp;
+                                Castles[color + "Castel" + index].MouseMove += Chessman_MouseMove;
+                            }
+
+                            if (dialogWindow.RBElephant.Checked)
+                            {
+                                var index = Elephants.Count + 1;
+                                Elephants.Add(color + "Elephant" + index, new Elephant(color));
+                                Controls.Add(Elephants[color + "Elephant" + index]);
+                                Elephants[color + "Elephant" + index].Location = finishPoint;
+
+                                Elephants[color + "Elephant" + index].MouseLeave += Chessman_MouseLeave;
+                                Elephants[color + "Elephant" + index].MouseDown += Chessman_MouseDown;
+                                Elephants[color + "Elephant" + index].MouseUp += Chessman_MouseUp;
+                                Elephants[color + "Elephant" + index].MouseMove += Chessman_MouseMove;
+                            }
+
+                            if (dialogWindow.RBHorse.Checked)
+                            {
+                                var index = Horses.Count + 1;
+                                Horses.Add(color + "Horse" + index, new Horse(color));
+                                Controls.Add(Horses[color + "Horse" + index]);
+                                Horses[color + "Horse" + index].Location = finishPoint;
+
+                                Horses[color + "Horse" + index].MouseLeave += Chessman_MouseLeave;
+                                Horses[color + "Horse" + index].MouseDown += Chessman_MouseDown;
+                                Horses[color + "Horse" + index].MouseUp += Chessman_MouseUp;
+                                Horses[color + "Horse" + index].MouseMove += Chessman_MouseMove;
+                            }
+
+                            if (dialogWindow.RBQueen.Checked)
+                            {
+                                var index = Queens.Count + 1;
+                                Queens.Add(color + "Queen" + index, new Queen(color));
+                                Controls.Add(Queens[color + "Queen" + index]);
+                                Queens[color + "Queen" + index].Location = finishPoint;
+
+                                Queens[color + "Queen" + index].MouseLeave += Chessman_MouseLeave;
+                                Queens[color + "Queen" + index].MouseDown += Chessman_MouseDown;
+                                Queens[color + "Queen" + index].MouseUp += Chessman_MouseUp;
+                                Queens[color + "Queen" + index].MouseMove += Chessman_MouseMove;
+                            }
+                        }
+                    }
+                }
             }
         }
 
