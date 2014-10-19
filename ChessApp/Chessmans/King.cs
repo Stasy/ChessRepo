@@ -55,7 +55,7 @@ namespace Chess.Chessmans
                 result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
             }
 
-            //Проверка возмажности атак на короля
+            //Проверка возможности атак на короля
             result = CheckKingBeAttacked(finishX, finishY, chessmanPresenceSign, controls, sender,
                 result);
 

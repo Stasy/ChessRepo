@@ -17,7 +17,7 @@ namespace Chess.Chessmans
             int startY, 
             int finishX, 
             int finishY, 
-            bool[,] ChessmanPresenceSign, 
+            bool[,] chessmanPresenceSign, 
             ControlCollection controls,
             object sender)
         {
@@ -31,23 +31,51 @@ namespace Chess.Chessmans
                 }
                 else
                 {
-                    result = CheckJumpOverChessman(startX, startY, finishX, finishY, ChessmanPresenceSign, "horizontal");
+                    result = CheckJumpOverChessman(startX, startY, finishX, finishY, chessmanPresenceSign, "horizontal");
                 }
             }
             else
             {
-                result = CheckJumpOverChessman(startX, startY, finishX, finishY, ChessmanPresenceSign, "vertical");
+                result = CheckJumpOverChessman(startX, startY, finishX, finishY, chessmanPresenceSign, "vertical");
             }
 
             //Проверяем наличие шахматы в конечной ячейке
             if (result == false)
             {
-                result = CheckFreeFinishCell(finishX, finishY, ChessmanPresenceSign, controls, sender);
+                result = CheckFreeFinishCell(finishX, finishY, chessmanPresenceSign, controls, sender);
             }
 
             //Проверка хода а месте
             if (startX == finishX && startY == finishY)
                 result = true;
+
+            //Клонируем массив
+            bool[,] fakeChessmanPresenceSign = new bool[8, 8];
+            for (var i = 0; i < 8; i++)
+            {
+                for (var j = 0; j < 8; j++)
+                {
+                    fakeChessmanPresenceSign[i, j] = chessmanPresenceSign[i, j];
+                }
+            }
+            fakeChessmanPresenceSign[startY, startX] = false;
+            fakeChessmanPresenceSign[finishY, finishX] = true;
+
+            //Проверка возможности атак на короля
+            foreach (var control in controls)
+            {
+                if (control is King)
+                {
+                    if (((Chessman)control).ChessColor == ((Chessman)sender).ChessColor)
+                    {
+                        var kingfinishX = (((King)control).Location.X - 27) / 50;
+                        var kingFinishY = (((King)control).Location.Y - 27) / 50;
+
+                        result = King.CheckKingBeAttacked(kingfinishX, kingFinishY, fakeChessmanPresenceSign,
+                            controls, control, result);
+                    }
+                }
+            }
 
             return result;
         }
