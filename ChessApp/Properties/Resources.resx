@@ -172,4 +172,7 @@
   <data name="moveOrderMessageError" xml:space="preserve">
     <value>Сейчас очередь хода вашего соперника</value>
   </data>
+  <data name="ShahMessage" xml:space="preserve">
+    <value>Шах!</value>
+  </data>
 </root>

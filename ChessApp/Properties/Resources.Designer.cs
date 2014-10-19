@@ -179,6 +179,15 @@ namespace Chess.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Шах!.
+        /// </summary>
+        internal static string ShahMessage {
+            get {
+                return ResourceManager.GetString("ShahMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon whiteCastle {

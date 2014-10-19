@@ -336,6 +336,12 @@ namespace Chess
 
                 moveOrder[((Chessman) sender).ChessColor] += -2;
 
+                if (((Chessman) sender).ShahSigne)
+                {
+                    MessageBox.Show(Resources.ShahMessage);
+                    ((Chessman) sender).ShahSigne = false;
+                }
+
                 //Проверка возможности превращения
                 if (sender is Pawn)
                 {

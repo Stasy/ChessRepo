@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chess.Chessmans;
 using Chess.Properties;
 
 
@@ -48,10 +49,12 @@ namespace Chess
             Size = new Size(46, 46);
             ChessColor = color;
             FirstMove = true;
+            ShahSigne = false;
         }
 
         public string ChessColor { get; set; }
         public bool FirstMove { get; set; }
+        public bool ShahSigne { get; set; }
 
         ~Chessman()
         {
@@ -188,6 +191,82 @@ namespace Chess
             }
 
             return result;
+        }
+
+        public static bool CheckAllyKingBeAttacked(int startX,
+            int startY,
+            int finishX,
+            int finishY,
+            bool[,] chessmanPresenceSign,
+            ControlCollection controls,
+            object sender,
+            bool result)
+        {
+            //Клонируем массив
+            bool[,] fakeChessmanPresenceSign = new bool[8, 8];
+            for (var i = 0; i < 8; i++)
+            {
+                for (var j = 0; j < 8; j++)
+                {
+                    fakeChessmanPresenceSign[i, j] = chessmanPresenceSign[i, j];
+                }
+            }
+            fakeChessmanPresenceSign[startY, startX] = false;
+            fakeChessmanPresenceSign[finishY, finishX] = true;
+
+            //Проверка возможности атак на короля
+            foreach (var control in controls)
+            {
+                if (control is King)
+                {
+                    if (((Chessman)control).ChessColor == ((Chessman)sender).ChessColor)
+                    {
+                        var kingfinishX = (((King)control).Location.X - 27) / 50;
+                        var kingFinishY = (((King)control).Location.Y - 27) / 50;
+
+                        result = King.CheckKingBeAttacked(kingfinishX, kingFinishY, fakeChessmanPresenceSign,
+                            controls, control, result);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public static void CheckEnemyKingBeAttaced(int startX,
+            int startY,
+            int finishX,
+            int finishY,
+            bool[,] chessmanPresenceSign,
+            ControlCollection controls,
+            object sender)
+        {
+            //Клонируем массив
+            bool[,] fakeChessmanPresenceSign = new bool[8, 8];
+            for (var i = 0; i < 8; i++)
+            {
+                for (var j = 0; j < 8; j++)
+                {
+                    fakeChessmanPresenceSign[i, j] = chessmanPresenceSign[i, j];
+                }
+            }
+            fakeChessmanPresenceSign[startY, startX] = false;
+            fakeChessmanPresenceSign[finishY, finishX] = true;
+
+            //Проверка возможности шаха
+            foreach (var control in controls)
+            {
+                if (control is King)
+                {
+                    if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
+                    {
+                        var kingfinishX = (((King)control).Location.X - 27) / 50;
+                        var kingFinishY = (((King)control).Location.Y - 27) / 50;
+
+                        ((Chessman)sender).ShahSigne = King.CheckKingBeAttacked(kingfinishX, kingFinishY, fakeChessmanPresenceSign,
+                            controls, control, false);
+                    }
+                }
+            }
         }
     }
 }
