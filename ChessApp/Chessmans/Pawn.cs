@@ -88,7 +88,7 @@ namespace Chess.Chessmans
                 {
                     if (startX != finishX)
                     {
-                        if (Math.Abs(startX - finishX) > 1)
+                        if (Math.Abs(startX - finishX) > 1 || !chessmanPresenceSign[finishY, finishX])
                         {
                             result = true;
                         }
