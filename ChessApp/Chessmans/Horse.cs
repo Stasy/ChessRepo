@@ -56,6 +56,13 @@ namespace Chess.Chessmans
             result = CheckAllyKingBeAttacked(startX, startY, finishX, finishY,
                     chessmanPresenceSign, controls, sender, result);
 
+            //Проверка правильного удаления шахматы
+            if (result && ((Chessman)sender).RemoveChessman)
+            {
+                controls.Add(TemporaryChassman);
+            }
+            ((Chessman)sender).RemoveChessman = false;
+
             //Проверка шаха
             if (!result && !((Chessman) sender).FakeCheck)
             {

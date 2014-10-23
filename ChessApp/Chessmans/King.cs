@@ -61,16 +61,22 @@ namespace Chess.Chessmans
             result = CheckKingBeAttacked(finishX, finishY, chessmanPresenceSign, controls, sender, result, parentSender);
 
             //Проверка необходимости удалить шахмату
-            foreach (var control in controls)
+
+            if (!result)
             {
-                if (control is Chessman)
+                foreach (var control in controls)
                 {
-                    if (((Chessman)control).MustBeRemoved)
+                    if (control is Chessman)
                     {
-                        controls.Remove((Chessman)control);
+                        if (((Chessman)control).Location == ((Chessman)sender).Location &&
+                            ((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
+                        {
+                            controls.Remove((Chessman)control);
+                        }
                     }
                 }
             }
+
             return result;
         }
 

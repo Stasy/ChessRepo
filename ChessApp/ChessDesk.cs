@@ -331,8 +331,8 @@ namespace Chess
             }
             else
             {
-                /*ChessmanPresenceSign[startY, startX] = false;
-                ChessmanPresenceSign[finishY, finishX] = true;*/
+                ChessmanPresenceSign[startY, startX] = false;
+                ChessmanPresenceSign[finishY, finishX] = true;
 
                 moveOrder[((Chessman) sender).ChessColor] += -2;
 

@@ -52,7 +52,7 @@ namespace Chess
             ShahSigne = false;
             MateSigne = false;
             FakeCheck = false;
-            MustBeRemoved = false;
+            RemoveChessman = false;
             FakeLocation = new Point();
         }
 
@@ -61,8 +61,10 @@ namespace Chess
         public bool ShahSigne { get; set; }
         public bool MateSigne { get; set; }
         public bool FakeCheck { get; set; }
-        public bool MustBeRemoved { get; set; }
+        public bool RemoveChessman { get; set; }
         public Point FakeLocation { get; set; }
+
+        public static Chessman TemporaryChassman;
 
         ~Chessman()
         {
@@ -192,14 +194,14 @@ namespace Chess
                         {
                             if (control != sender && !((Chessman) sender).FakeCheck)
                             {
-                                /*Controls.Remove((Chessman) control);*/
-                                ((Chessman) control).MustBeRemoved = true;
+                                TemporaryChassman = ((Chessman)control);
+                                Controls.Remove((Chessman) control);
+                                ((Chessman) sender).RemoveChessman = true;
                             }
                         }
                     }
                 }
             }
-
             return result;
         }
 
@@ -246,34 +248,6 @@ namespace Chess
             {
                 fakeChessmanPresenceSign[startY, startX] = chessmanPresenceSign[startY, startX];
                 fakeChessmanPresenceSign[finishY, finishX] = chessmanPresenceSign[finishY, finishX];
-
-                //Проверка признака удаления у шахматы, поставленного под угрозой шаха
-                foreach (var control in controls)
-                {
-                    if (control is Chessman)
-                    {
-                        if (((Chessman) control).MustBeRemoved)
-                        {
-                            ((Chessman) control).MustBeRemoved = false;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //Проверка необходимости удалить шахмату
-                foreach (var control in controls)
-                {
-                    if (control is Chessman)
-                    {
-                        if (((Chessman) control).MustBeRemoved)
-                        {
-                            controls.Remove((Chessman) control);
-                        }
-                    }
-                }
-                chessmanPresenceSign[startY, startX] = false;
-                chessmanPresenceSign[finishY, finishX] = true;
             }
 
             return result;
@@ -336,6 +310,15 @@ namespace Chess
                 int kingsStartX, kingsStartY;
                 bool result;
 
+                //Клонируем свойство расположения шахмат для возможности фальсификации
+                foreach (var control in controls)
+                {
+                    if (control is Chessman)
+                    {
+                        ((Chessman)control).FakeLocation = ((Chessman)control).Location;
+                    }
+                }
+                
                 foreach (var control in controls)
                 {
                     if (control is Chessman && flag)
