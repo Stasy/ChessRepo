@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 
@@ -16,7 +17,8 @@ namespace Chess.Chessmans
             int finishY,
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
-            object sender)
+            object sender, 
+            Dictionary<string, int> moveOrder)
         {
             var result = false;
 
@@ -55,12 +57,18 @@ namespace Chess.Chessmans
                 result = true;
 
             //Проверка атаки на короля-союзника
-            result = CheckAllyKingBeAttacked(startX, startY, finishX, finishY,
-                chessmanPresenceSign, controls, sender, result);
+            /*if (((Chessman) sender).FakeCheck)
+            {*/
+                result = CheckAllyKingBeAttacked(startX, startY, finishX, finishY,
+                    chessmanPresenceSign, controls, sender, result);
+            /*}*/
 
             //Проверка шаха
-            CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
-                chessmanPresenceSign, controls, sender);
+            if (!result && !((Chessman)sender).FakeCheck)
+            {
+                CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
+                    chessmanPresenceSign, controls, sender, moveOrder);    
+            }
 
             return result;
         }

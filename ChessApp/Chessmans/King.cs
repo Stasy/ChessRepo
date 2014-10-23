@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Chess.Chessmans
 {
@@ -22,7 +23,8 @@ namespace Chess.Chessmans
             int finishY,
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
-            object sender)
+            object sender,
+            object parentSender)
         {
             //Общие правила хода
             var result = false;
@@ -30,12 +32,12 @@ namespace Chess.Chessmans
             {
                 if (startY != finishY)
                 {
-                    if (Math.Abs(startX - finishX) != 1 && Math.Abs(startY - finishY) != 1)
+                    if (Math.Abs(startX - finishX) != 1 || Math.Abs(startY - finishY) != 1)
                         result = true;
                 }
                 else
                 {
-                    if ((startX != finishX - 1 && startX != finishX + 1))
+                    if (Math.Abs(startX - finishX) != 1)
                     {
                         result = true;
                     }
@@ -43,7 +45,7 @@ namespace Chess.Chessmans
             }
             else
             {
-                if (startY != finishY - 1 && startY != finishY + 1)
+                if (Math.Abs(startY - finishY) != 1)
                 {
                     result = true;
                 }
@@ -56,8 +58,7 @@ namespace Chess.Chessmans
             }
 
             //Проверка возможности атак на короля
-            result = CheckKingBeAttacked(finishX, finishY, chessmanPresenceSign, controls, sender,
-                result);
+            result = CheckKingBeAttacked(finishX, finishY, chessmanPresenceSign, controls, sender, result, parentSender);
 
             return result;
         }
@@ -67,15 +68,16 @@ namespace Chess.Chessmans
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
             object sender,
-            bool result)
+            bool result,
+            object parentSender)
         {
             var diagonalResult = CheckDiagonalAttack(finishX, finishY, chessmanPresenceSign, controls,
-                sender, result);
+                sender, parentSender, result);
             var horizontalResult = CheckHorizontalAttack(finishX, finishY, chessmanPresenceSign,
-                controls, sender, result);
+                controls, sender, parentSender, result);
             var verticalResult = CheckVerticalAttack(finishX, finishY, chessmanPresenceSign, controls,
-                sender, result);
-            var horsesResult = CheckHorsesAttack(finishX, finishY, controls, sender, result);
+                sender, parentSender, result);
+            var horsesResult = CheckHorsesAttack(finishX, finishY, controls, sender, parentSender, result);
 
             result = verticalResult
                 ? verticalResult
@@ -92,6 +94,7 @@ namespace Chess.Chessmans
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
             object sender,
+            object parentSender,
             bool result)
         {
             FlagForCheckDiagonalAttack[0] =
@@ -104,7 +107,7 @@ namespace Chess.Chessmans
                 var checkPoint = new Point((finishX + i)*50 + 27, (finishY + i)*50 + 27);
                 if (chessmanPresenceSign[finishY + i, finishX + i] && FlagForCheckDiagonalAttack[0])
                 {
-                    result = CheckCurrentDiagonal(checkPoint, controls, sender, result, 0, i);
+                    result = CheckCurrentDiagonal(checkPoint, controls, sender, parentSender, result, 0, i);
                 }
             }
 
@@ -114,7 +117,7 @@ namespace Chess.Chessmans
                 var finishPoint = new Point((finishX - i)*50 + 27, (finishY - i)*50 + 27);
                 if (chessmanPresenceSign[finishY - i, finishX - i] && FlagForCheckDiagonalAttack[1])
                 {
-                    result = CheckCurrentDiagonal(finishPoint, controls, sender, result, 1, i);
+                    result = CheckCurrentDiagonal(finishPoint, controls, sender, parentSender, result, 1, i);
                 }
             }
 
@@ -123,7 +126,7 @@ namespace Chess.Chessmans
                 var finishPoint = new Point((finishX - i)*50 + 27, (finishY + i)*50 + 27);
                 if (chessmanPresenceSign[finishY + i, finishX - i] && FlagForCheckDiagonalAttack[2])
                 {
-                    result = CheckCurrentDiagonal(finishPoint, controls, sender, result, 2, i);
+                    result = CheckCurrentDiagonal(finishPoint, controls, sender, parentSender, result, 2, i);
                 }
             }
 
@@ -132,7 +135,7 @@ namespace Chess.Chessmans
                 var finishPoint = new Point((finishX + i)*50 + 27, (finishY - i)*50 + 27);
                 if (chessmanPresenceSign[finishY - i, finishX + i] && FlagForCheckDiagonalAttack[3])
                 {
-                    result = CheckCurrentDiagonal(finishPoint, controls, sender, result, 3, i);
+                    result = CheckCurrentDiagonal(finishPoint, controls, sender, parentSender, result, 3, i);
                 }
             }
 
@@ -144,6 +147,7 @@ namespace Chess.Chessmans
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
             object sender,
+            object parentSender,
             bool result)
         {
             FlagForCheckDiagonalAttack[0] =
@@ -156,7 +160,7 @@ namespace Chess.Chessmans
                 var checkPoint = new Point((finishX + i)*50 + 27, finishY*50 + 27);
                 if (chessmanPresenceSign[finishY, finishX + i] && FlagForCheckDiagonalAttack[0])
                 {
-                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, result, 0, i);
+                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, parentSender, result, 0, i);
                 }
             }
 
@@ -165,7 +169,7 @@ namespace Chess.Chessmans
                 var checkPoint = new Point((finishX - i)*50 + 27, finishY*50 + 27);
                 if (chessmanPresenceSign[finishY, finishX - i] && FlagForCheckDiagonalAttack[1])
                 {
-                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, result, 1, i);
+                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, parentSender, result, 1, i);
                 }
             }
 
@@ -178,6 +182,7 @@ namespace Chess.Chessmans
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
             object sender,
+            object parentSender,
             bool result)
         {
             for (var i = 1; (finishY - i) >= 0 && FlagForCheckDiagonalAttack[2]; i++)
@@ -185,7 +190,7 @@ namespace Chess.Chessmans
                 var checkPoint = new Point(finishX*50 + 27, (finishY - i)*50 + 27);
                 if (chessmanPresenceSign[finishY - i, finishX] && FlagForCheckDiagonalAttack[2])
                 {
-                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, result, 2, i);
+                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, parentSender, result, 2, i);
                 }
             }
 
@@ -194,7 +199,7 @@ namespace Chess.Chessmans
                 var checkPoint = new Point(finishX*50 + 27, (finishY + i)*50 + 27);
                 if (chessmanPresenceSign[finishY + i, finishX] && FlagForCheckDiagonalAttack[3])
                 {
-                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, result, 3, i);
+                    result = CheckCurrentHorizontalOrVertical(checkPoint, controls, sender, parentSender, result, 3, i);
                 }
             }
             return result;
@@ -203,7 +208,8 @@ namespace Chess.Chessmans
         private static bool CheckHorsesAttack(int finishX,
             int finishY,
             ControlCollection controls,
-            object sender,
+            object sender, 
+            object parentSender,
             bool result)
         {
             Point checkPoint;
@@ -213,13 +219,13 @@ namespace Chess.Chessmans
                 if ((finishY + 2) < 8)
                 {
                     checkPoint = new Point((finishX + 1)*50 + 27, (finishY + 2)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
 
                 if ((finishY - 2) >= 0)
                 {
                     checkPoint = new Point((finishX + 1)*50 + 27, (finishY - 2)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
             }
 
@@ -228,13 +234,13 @@ namespace Chess.Chessmans
                 if ((finishY + 2) < 8)
                 {
                     checkPoint = new Point((finishX - 1)*50 + 27, (finishY + 2)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
 
                 if ((finishY - 2) >= 0)
                 {
                     checkPoint = new Point((finishX - 1)*50 + 27, (finishY - 2)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
             }
 
@@ -243,13 +249,13 @@ namespace Chess.Chessmans
                 if ((finishY - 1) >= 0)
                 {
                     checkPoint = new Point((finishX + 2)*50 + 27, (finishY + 1)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
 
                 if ((finishY + 1) < 8)
                 {
                     checkPoint = new Point((finishX + 2)*50 + 27, (finishY - 1)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
             }
 
@@ -258,29 +264,48 @@ namespace Chess.Chessmans
                 if ((finishY + 1) < 8)
                 {
                     checkPoint = new Point((finishX - 2)*50 + 27, (finishY + 1)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
 
                 if ((finishY - 1) >= 0)
                 {
                     checkPoint = new Point((finishX - 2)*50 + 27, (finishY - 1)*50 + 27);
-                    result = CheckCurrentHorse(checkPoint, controls, sender, result);
+                    result = CheckCurrentHorse(checkPoint, controls, sender, parentSender, result);
                 }
             }
 
             return result;
         }
 
-        private static bool CheckCurrentDiagonal(Point checkPoint, ControlCollection controls, object sender,
+        private static bool CheckCurrentDiagonal(Point checkPoint, ControlCollection controls, object sender, object parentSender,
             bool result, int currentDiagonal, int i)
         {
             foreach (var control in controls)
             {
                 if (control is Chessman)
                 {
-                    if (((Chessman) control).Location == checkPoint)
+                    if (((Chessman) control).Location == checkPoint && !((Chessman) parentSender).FakeCheck)
                     {
                         if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
+                        {
+                            if (control is Queen || control is Elephant)
+                            {
+                                result = true;
+                            }
+
+                            if (control is Pawn && (Math.Abs(i) == 1) || control is King && (Math.Abs(i) == 1))
+                            {
+                                result = true;
+                            }
+                        }
+
+                        FlagForCheckDiagonalAttack[currentDiagonal] = false;
+                        break;
+                    }
+
+                    if (((Chessman)control).FakeLocation == checkPoint && ((Chessman)parentSender).FakeCheck)
+                    {
+                        if (((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
                         {
                             if (control is Queen || control is Elephant)
                             {
@@ -301,16 +326,31 @@ namespace Chess.Chessmans
             return result;
         }
 
-        private static bool CheckCurrentHorizontalOrVertical(Point checkPoint, ControlCollection controls, object sender,
+        private static bool CheckCurrentHorizontalOrVertical(Point checkPoint, ControlCollection controls, object sender, object parentSender,
             bool result, int currentDiagonalOrVertical, int i)
         {
             foreach (var control in controls)
             {
                 if (control is Chessman)
                 {
-                    if (((Chessman) control).Location == checkPoint)
+                    if (((Chessman)control).Location == checkPoint && !((Chessman)parentSender).FakeCheck)
                     {
                         if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
+                        {
+                            if (control is Queen || control is Castle ||
+                                control is King && (Math.Abs(i) == 1))
+                            {
+                                result = true;
+                            }
+                        }
+
+                        FlagForCheckDiagonalAttack[currentDiagonalOrVertical] = false;
+                        break;
+                    }
+
+                    if (((Chessman)control).FakeLocation == checkPoint && ((Chessman)parentSender).FakeCheck)
+                    {
+                        if (((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
                         {
                             if (control is Queen || control is Castle ||
                                 control is King && (Math.Abs(i) == 1))
@@ -327,16 +367,28 @@ namespace Chess.Chessmans
             return result;
         }
 
-        private static bool CheckCurrentHorse(Point checkPoint, ControlCollection controls, object sender,
+        private static bool CheckCurrentHorse(Point checkPoint, ControlCollection controls, object sender, object parentSender,
             bool result)
         {
             foreach (var control in controls)
             {
                 if (control is Chessman)
                 {
-                    if (((Chessman) control).Location == checkPoint)
+                    if (((Chessman) control).Location == checkPoint && !((Chessman)parentSender).FakeCheck)
                     {
                         if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
+                        {
+                            if (control is Horse)
+                            {
+                                result = true;
+                            }
+                        }
+                        break;
+                    }
+
+                    if (((Chessman)control).FakeLocation == checkPoint && ((Chessman)parentSender).FakeCheck)
+                    {
+                        if (((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
                         {
                             if (control is Horse)
                             {

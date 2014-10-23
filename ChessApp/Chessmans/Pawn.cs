@@ -147,7 +147,7 @@ namespace Chess.Chessmans
                 //Проверка первого хода
                 if (!result)
                 {
-                    if (((Chessman)sender).FirstMove)
+                    if (((Chessman)sender).FirstMove && ((Chessman)sender).FakeCheck)
                     {
                         ((Chessman)sender).FirstMove = false;
                     }
@@ -170,11 +170,14 @@ namespace Chess.Chessmans
 
             //Проверка атаки на короля-союзника
             result = CheckAllyKingBeAttacked(startX, startY, finishX, finishY,
-                chessmanPresenceSign, controls, sender, result);
+                    chessmanPresenceSign, controls, sender, result);
 
             //Проверка шаха
-            CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
-                chessmanPresenceSign, controls, sender);
+            if (!result && !((Chessman) sender).FakeCheck)
+            {
+                CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
+                    chessmanPresenceSign, controls, sender, moveOrder);
+            }
 
             return result;
         }

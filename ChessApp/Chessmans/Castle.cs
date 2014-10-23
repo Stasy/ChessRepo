@@ -19,7 +19,8 @@ namespace Chess.Chessmans
             int finishY, 
             bool[,] chessmanPresenceSign, 
             ControlCollection controls,
-            object sender)
+            object sender,
+            Dictionary<string, int> moveOrder)
         {
             //Общие правила хода
             var result = false;
@@ -51,11 +52,14 @@ namespace Chess.Chessmans
 
             //Проверка атаки на короля-союзника
             result = CheckAllyKingBeAttacked(startX, startY, finishX, finishY,
-                chessmanPresenceSign, controls, sender, result);
-
+                    chessmanPresenceSign, controls, sender, result);
+           
             //Проверка шаха
-            CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
-                chessmanPresenceSign, controls, sender);
+            if (!result && !((Chessman) sender).FakeCheck)
+            {
+                CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
+                    chessmanPresenceSign, controls, sender, moveOrder);
+            }
 
             return result;
         }

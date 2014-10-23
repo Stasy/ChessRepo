@@ -50,11 +50,19 @@ namespace Chess
             ChessColor = color;
             FirstMove = true;
             ShahSigne = false;
+            MateSigne = false;
+            FakeCheck = false;
+            MustBeRemoved = false;
+            FakeLocation = new Point();
         }
 
         public string ChessColor { get; set; }
         public bool FirstMove { get; set; }
         public bool ShahSigne { get; set; }
+        public bool MateSigne { get; set; }
+        public bool FakeCheck { get; set; }
+        public bool MustBeRemoved { get; set; }
+        public Point FakeLocation { get; set; }
 
         ~Chessman()
         {
@@ -181,9 +189,10 @@ namespace Chess
                         }
                         else
                         {
-                            if(control != sender)
+                            if(control != sender && !((Chessman)sender).FakeCheck)
                             {
-                                Controls.Remove((Chessman) control);
+                                /*Controls.Remove((Chessman) control);*/
+                                ((Chessman) control).MustBeRemoved = true;
                             }
                         }
                     }
@@ -211,9 +220,11 @@ namespace Chess
                     fakeChessmanPresenceSign[i, j] = chessmanPresenceSign[i, j];
                 }
             }
+
+            //Меняем координаты фигуры, как будто ход завершен
             fakeChessmanPresenceSign[startY, startX] = false;
             fakeChessmanPresenceSign[finishY, finishX] = true;
-
+            
             //Проверка возможности атак на короля
             foreach (var control in controls)
             {
@@ -225,10 +236,45 @@ namespace Chess
                         var kingFinishY = (((King)control).Location.Y - 27) / 50;
 
                         result = King.CheckKingBeAttacked(kingfinishX, kingFinishY, fakeChessmanPresenceSign,
-                            controls, control, result);
+                            controls, control, result, sender);
                     }
                 }
             }
+
+            if (result)
+            {
+                fakeChessmanPresenceSign[startY, startX] = chessmanPresenceSign[startY, startX];
+                fakeChessmanPresenceSign[finishY, finishX] = chessmanPresenceSign[finishY, finishX];
+
+                //Проверка признака удаления у шахматы, поставленного под угрозой шаха
+                foreach (var control in controls)
+                {
+                    if (control is Chessman)
+                    {
+                        if (((Chessman) control).MustBeRemoved)
+                        {
+                            ((Chessman) control).MustBeRemoved = false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //Проверка необходимости удалить шахмату
+                foreach (var control in controls)
+                {
+                    if (control is Chessman)
+                    {
+                        if (((Chessman)control).MustBeRemoved)
+                        {
+                            controls.Remove((Chessman)control);
+                        }
+                    }
+                }
+                chessmanPresenceSign[startY, startX] = false;
+                chessmanPresenceSign[finishY, finishX] = true;
+            }
+
             return result;
         }
 
@@ -238,9 +284,10 @@ namespace Chess
             int finishY,
             bool[,] chessmanPresenceSign,
             ControlCollection controls,
-            object sender)
+            object sender,
+            Dictionary<string, int> moveOrder)
         {
-            //Клонируем массив
+            //Клонируем массив признака расположения шахмат, для фальсификации
             bool[,] fakeChessmanPresenceSign = new bool[8, 8];
             for (var i = 0; i < 8; i++)
             {
@@ -252,6 +299,15 @@ namespace Chess
             fakeChessmanPresenceSign[startY, startX] = false;
             fakeChessmanPresenceSign[finishY, finishX] = true;
 
+            //Клонируем свойство расположения шахмат для возможности фальсификации
+            foreach (var control in controls)
+            {
+                if (control is Chessman)
+                {
+                    ((Chessman) control).FakeLocation = ((Chessman) control).Location;
+                }
+            }
+
             //Проверка возможности шаха
             foreach (var control in controls)
             {
@@ -262,8 +318,205 @@ namespace Chess
                         var kingfinishX = (((King)control).Location.X - 27) / 50;
                         var kingFinishY = (((King)control).Location.Y - 27) / 50;
 
+                        ((Chessman)control).FakeCheck = true;
                         ((Chessman)sender).ShahSigne = King.CheckKingBeAttacked(kingfinishX, kingFinishY, fakeChessmanPresenceSign,
-                            controls, control, false);
+                            controls, control, false, sender);
+                        ((Chessman)control).FakeCheck = false;
+                    }
+                }
+            }
+
+            
+            //Проверка возможности мата
+            if (((Chessman) sender).ShahSigne)
+            {
+                var flag = true;
+                int kingsStartX, kingsStartY;
+                bool result;
+                
+                foreach (var control in controls)
+                {
+                    if (control is Chessman && flag)
+                    {
+                        ((Chessman)sender).MateSigne = true;
+                        if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
+                        {
+                            result = true;
+
+                            // Делаем фэйковые координаты
+                            kingsStartX = (((Chessman) control).Location.X - 27)/50;
+                            kingsStartY = (((Chessman) control).Location.Y - 27)/50;
+                            
+
+                            if (control is King)
+                            {
+                            for (var i = 0; i < 8 && flag; i++)
+                            {
+                                for (var j = 0; j < 8 && flag; j++)
+                                {
+                                    var kingsFinishX = i;
+                                    var kingsFinishY = j;
+
+                                    if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                    {
+                                            ((Chessman) control).FakeCheck = true;
+                                            result = King.CheckKingMove(kingsStartX, kingsStartY, kingsFinishX,
+                                                kingsFinishY,
+                                                fakeChessmanPresenceSign, controls, control, sender);
+                                            ((Chessman) control).FakeCheck = false;
+
+                                            if (!result)
+                                            {
+                                                flag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (control is Queen)
+                            {
+
+                            for (var i = 0; i < 8 && flag; i++)
+                            {
+                                for (var j = 0; j < 8 && flag; j++)
+                                {
+                                    //Задаем фэйковое положение
+                                    var kingsFinishX = i;
+                                    var kingsFinishY = j;
+                                    ((Chessman)control).FakeLocation = new Point(kingsFinishX * 50 + 27, kingsFinishY*50 + 27);
+
+                                    if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                    {
+
+                                            ((Chessman) control).FakeCheck = true;
+                                            result = Queen.CheckQueenMove(kingsStartX, kingsStartY, kingsFinishX,
+                                                kingsFinishY,
+                                                fakeChessmanPresenceSign, controls, control, moveOrder);
+                                            ((Chessman) control).FakeCheck = false;
+
+                                            if (!result)
+                                            {
+                                                flag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            if (control is Castle)
+                            {
+                            for (var i = 0; i < 8 && flag; i++)
+                            {
+                                for (var j = 0; j < 8 && flag; j++)
+                                {
+                                    var kingsFinishX = i;
+                                    var kingsFinishY = j;
+                                    if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                    {
+
+                                            ((Chessman) control).FakeCheck = true;
+                                            result = Castle.CheckCastleMove(kingsStartX, kingsStartY, kingsFinishX,
+                                                kingsFinishY,
+                                                fakeChessmanPresenceSign, controls, control, moveOrder);
+                                            ((Chessman) control).FakeCheck = false;
+
+                                            if (!result)
+                                            {
+                                                flag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (control is Elephant)
+                            {
+                            for (var i = 0; i < 8 && flag; i++)
+                            {
+                                for (var j = 0; j < 8 && flag; j++)
+                                {
+                                    var kingsFinishX = i;
+                                    var kingsFinishY = j;
+                                    if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                    {
+
+
+                                            ((Chessman) control).FakeCheck = true;
+                                            result = Elephant.CheckElephantMove(kingsStartX, kingsStartY, kingsFinishX,
+                                                kingsFinishY,
+                                                fakeChessmanPresenceSign, controls, control, moveOrder);
+                                            ((Chessman) control).FakeCheck = false;
+
+                                            if (!result)
+                                            {
+                                                flag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            if (control is Horse)
+                            {
+                            for (var i = 0; i < 8 && flag; i++)
+                            {
+                                for (var j = 0; j < 8 && flag; j++)
+                                {
+                                    var kingsFinishX = i;
+                                    var kingsFinishY = j;
+                                    if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                    {
+
+                                            ((Chessman) control).FakeCheck = true;
+                                            result = Horse.CheckHorseMove(kingsStartX, kingsStartY, kingsFinishX,
+                                                kingsFinishY,
+                                                fakeChessmanPresenceSign, controls, control, moveOrder);
+                                            ((Chessman) control).FakeCheck = false;
+
+                                            if (!result)
+                                            {
+                                                flag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (control is Pawn)
+                            {
+                            for (var i = 0; i < 8 && flag; i++)
+                            {
+                                for (var j = 0; j < 8 && flag; j++)
+                                {
+                                    var kingsFinishX = i;
+                                    var kingsFinishY = j;
+                                    if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                    {
+
+                                            ((Chessman)control).FakeCheck = true;
+                                            result = Pawn.CheckPawnMove(kingsStartX, kingsStartY, kingsFinishX, kingsFinishY,
+                                                fakeChessmanPresenceSign, controls, control, moveOrder);
+                                            ((Chessman)control).FakeCheck = false;
+
+                                            if (!result)
+                                            {
+                                                flag = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (!result)
+                                ((Chessman)sender).MateSigne = false;
+                        }
                     }
                 }
             }

@@ -151,6 +151,15 @@ namespace Chess.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Конец игры.
+        /// </summary>
+        internal static string GameEndMessage {
+            get {
+                return ResourceManager.GetString("GameEndMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap grayCell {
@@ -170,11 +179,29 @@ namespace Chess.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Шах и мат!.
+        /// </summary>
+        internal static string MateMessage {
+            get {
+                return ResourceManager.GetString("MateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Сейчас очередь хода вашего соперника.
         /// </summary>
         internal static string moveOrderMessageError {
             get {
                 return ResourceManager.GetString("moveOrderMessageError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Начать игру занаво?.
+        /// </summary>
+        internal static string restartQuestion {
+            get {
+                return ResourceManager.GetString("restartQuestion", resourceCulture);
             }
         }
         

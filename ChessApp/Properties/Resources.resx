@@ -175,4 +175,13 @@
   <data name="ShahMessage" xml:space="preserve">
     <value>Шах!</value>
   </data>
+  <data name="MateMessage" xml:space="preserve">
+    <value>Шах и мат!</value>
+  </data>
+  <data name="GameEndMessage" xml:space="preserve">
+    <value>Конец игры</value>
+  </data>
+  <data name="restartQuestion" xml:space="preserve">
+    <value>Начать игру занаво?</value>
+  </data>
 </root>

@@ -261,12 +261,12 @@ namespace Chess
 
             Queens["whiteQueen"].Location = CellsPositions[7, 3];
             ChessmanPresenceSign[7, 3] = true;
-            Queens["blackQueen"].Location = CellsPositions[0, 4];
+            Queens["blackQueen"].Location = CellsPositions[0, 3];
             ChessmanPresenceSign[0, 4] = true;
 
             Kings["whiteKing"].Location = CellsPositions[7, 4];
             ChessmanPresenceSign[7, 4] = true;
-            Kings["blackKing"].Location = CellsPositions[0, 3];
+            Kings["blackKing"].Location = CellsPositions[0, 4];
             ChessmanPresenceSign[0, 3] = true;
 
             Pawns["whitePawn1"].Location = CellsPositions[6, 0];
@@ -311,15 +311,15 @@ namespace Chess
             var finishY = (CellsPositions[chessmansCellIndexRow, chessmansCellIndexColumn].Y - 27) / 50;
 
             var impossibleMove = sender is Queen
-                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
+                ? Queen.CheckQueenMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, moveOrder)
                 : sender is Castle
-                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
+                    ? Castle.CheckCastleMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, moveOrder)
                     : sender is Elephant
-                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
+                        ? Elephant.CheckElephantMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, moveOrder)
                         : sender is Horse
-                            ? Horse.CheckHorseMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
+                            ? Horse.CheckHorseMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, moveOrder)
                             : sender is King
-                                ? King.CheckKingMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender)
+                                ? King.CheckKingMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, sender)
                                 : Pawn.CheckPawnMove(startX, startY, finishX, finishY, ChessmanPresenceSign, Controls, sender, moveOrder);
 
             if (impossibleMove)
@@ -331,15 +331,30 @@ namespace Chess
             }
             else
             {
-                ChessmanPresenceSign[startY, startX] = false;
-                ChessmanPresenceSign[finishY, finishX] = true;
+                /*ChessmanPresenceSign[startY, startX] = false;
+                ChessmanPresenceSign[finishY, finishX] = true;*/
 
                 moveOrder[((Chessman) sender).ChessColor] += -2;
 
-                if (((Chessman) sender).ShahSigne)
+                if (((Chessman)sender).ShahSigne && !((Chessman)sender).MateSigne)
                 {
                     MessageBox.Show(Resources.ShahMessage);
                     ((Chessman) sender).ShahSigne = false;
+                }
+
+                if (((Chessman) sender).MateSigne)
+                {
+                    DialogResult result = MessageBox.Show(Resources.MateMessage + Environment.NewLine + Resources.restartQuestion, 
+                        Resources.GameEndMessage, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        Application.Restart();
+                    }
+                    else
+                    {
+                        Application.Exit();   
+                    }
                 }
 
                 //Проверка возможности превращения
