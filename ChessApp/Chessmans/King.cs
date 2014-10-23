@@ -208,7 +208,7 @@ namespace Chess.Chessmans
         private static bool CheckHorsesAttack(int finishX,
             int finishY,
             ControlCollection controls,
-            object sender, 
+            object sender,
             object parentSender,
             bool result)
         {
@@ -277,7 +277,8 @@ namespace Chess.Chessmans
             return result;
         }
 
-        private static bool CheckCurrentDiagonal(Point checkPoint, ControlCollection controls, object sender, object parentSender,
+        private static bool CheckCurrentDiagonal(Point checkPoint, ControlCollection controls, object sender,
+            object parentSender,
             bool result, int currentDiagonal, int i)
         {
             foreach (var control in controls)
@@ -295,7 +296,20 @@ namespace Chess.Chessmans
 
                             if (control is Pawn && (Math.Abs(i) == 1) || control is King && (Math.Abs(i) == 1))
                             {
-                                result = true;
+                                if (control is Pawn)
+                                {
+                                    if (((Pawn) control).ChessColor == "white" &&
+                                        ((Pawn) control).Location.Y > ((Chessman) sender).Location.Y ||
+                                        ((Pawn) control).ChessColor == "black" &&
+                                        ((Pawn) control).Location.Y < ((Chessman) sender).Location.Y)
+                                    {
+                                        result = true;
+                                    }
+                                }
+                                else
+                                {
+                                    result = true;
+                                }
                             }
                         }
 
@@ -303,9 +317,9 @@ namespace Chess.Chessmans
                         break;
                     }
 
-                    if (((Chessman)control).FakeLocation == checkPoint && ((Chessman)parentSender).FakeCheck)
+                    if (((Chessman) control).FakeLocation == checkPoint && ((Chessman) parentSender).FakeCheck)
                     {
-                        if (((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
+                        if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
                         {
                             if (control is Queen || control is Elephant)
                             {
@@ -326,14 +340,15 @@ namespace Chess.Chessmans
             return result;
         }
 
-        private static bool CheckCurrentHorizontalOrVertical(Point checkPoint, ControlCollection controls, object sender, object parentSender,
+        private static bool CheckCurrentHorizontalOrVertical(Point checkPoint, ControlCollection controls, object sender,
+            object parentSender,
             bool result, int currentDiagonalOrVertical, int i)
         {
             foreach (var control in controls)
             {
                 if (control is Chessman)
                 {
-                    if (((Chessman)control).Location == checkPoint && !((Chessman)parentSender).FakeCheck)
+                    if (((Chessman) control).Location == checkPoint && !((Chessman) parentSender).FakeCheck)
                     {
                         if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
                         {
@@ -348,9 +363,9 @@ namespace Chess.Chessmans
                         break;
                     }
 
-                    if (((Chessman)control).FakeLocation == checkPoint && ((Chessman)parentSender).FakeCheck)
+                    if (((Chessman) control).FakeLocation == checkPoint && ((Chessman) parentSender).FakeCheck)
                     {
-                        if (((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
+                        if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
                         {
                             if (control is Queen || control is Castle ||
                                 control is King && (Math.Abs(i) == 1))
@@ -367,14 +382,15 @@ namespace Chess.Chessmans
             return result;
         }
 
-        private static bool CheckCurrentHorse(Point checkPoint, ControlCollection controls, object sender, object parentSender,
+        private static bool CheckCurrentHorse(Point checkPoint, ControlCollection controls, object sender,
+            object parentSender,
             bool result)
         {
             foreach (var control in controls)
             {
                 if (control is Chessman)
                 {
-                    if (((Chessman) control).Location == checkPoint && !((Chessman)parentSender).FakeCheck)
+                    if (((Chessman) control).Location == checkPoint && !((Chessman) parentSender).FakeCheck)
                     {
                         if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
                         {
@@ -386,9 +402,9 @@ namespace Chess.Chessmans
                         break;
                     }
 
-                    if (((Chessman)control).FakeLocation == checkPoint && ((Chessman)parentSender).FakeCheck)
+                    if (((Chessman) control).FakeLocation == checkPoint && ((Chessman) parentSender).FakeCheck)
                     {
-                        if (((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
+                        if (((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
                         {
                             if (control is Horse)
                             {
