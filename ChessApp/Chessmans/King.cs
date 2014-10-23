@@ -60,6 +60,17 @@ namespace Chess.Chessmans
             //Проверка возможности атак на короля
             result = CheckKingBeAttacked(finishX, finishY, chessmanPresenceSign, controls, sender, result, parentSender);
 
+            //Проверка необходимости удалить шахмату
+            foreach (var control in controls)
+            {
+                if (control is Chessman)
+                {
+                    if (((Chessman)control).MustBeRemoved)
+                    {
+                        controls.Remove((Chessman)control);
+                    }
+                }
+            }
             return result;
         }
 
