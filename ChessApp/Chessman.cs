@@ -194,7 +194,7 @@ namespace Chess
                         {
                             if (control != sender && !((Chessman) sender).FakeCheck)
                             {
-                                TemporaryChassman = ((Chessman)control);
+                                TemporaryChassman = ((Chessman) control);
                                 Controls.Remove((Chessman) control);
                                 ((Chessman) sender).RemoveChessman = true;
                             }
@@ -307,7 +307,7 @@ namespace Chess
             if (((Chessman) sender).ShahSigne)
             {
                 var flag = true;
-                int kingsStartX, kingsStartY;
+                int chessStartX, chessStartY;
                 bool result;
 
                 //Клонируем свойство расположения шахмат для возможности фальсификации
@@ -315,10 +315,10 @@ namespace Chess
                 {
                     if (control is Chessman)
                     {
-                        ((Chessman)control).FakeLocation = ((Chessman)control).Location;
+                        ((Chessman) control).FakeLocation = ((Chessman) control).Location;
                     }
                 }
-                
+
                 foreach (var control in controls)
                 {
                     if (control is Chessman && flag)
@@ -329,8 +329,8 @@ namespace Chess
                             result = true;
 
                             // Делаем фэйковые координаты
-                            kingsStartX = (((Chessman) control).Location.X - 27)/50;
-                            kingsStartY = (((Chessman) control).Location.Y - 27)/50;
+                            chessStartX = (((Chessman) control).Location.X - 27)/50;
+                            chessStartY = (((Chessman) control).Location.Y - 27)/50;
 
 
                             if (control is King)
@@ -339,14 +339,14 @@ namespace Chess
                                 {
                                     for (var j = 0; j < 8 && flag; j++)
                                     {
-                                        var kingsFinishX = i;
-                                        var kingsFinishY = j;
+                                        var chessFinishX = i;
+                                        var chessFinishY = j;
 
-                                        if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                        if (chessFinishX != chessStartX || chessFinishY != chessStartY)
                                         {
                                             ((Chessman) control).FakeCheck = true;
-                                            result = King.CheckKingMove(kingsStartX, kingsStartY, kingsFinishX,
-                                                kingsFinishY,
+                                            result = King.CheckKingMove(chessStartX, chessStartY, chessFinishX,
+                                                chessFinishY,
                                                 fakeChessmanPresenceSign, controls, control, sender);
                                             ((Chessman) control).FakeCheck = false;
 
@@ -366,16 +366,16 @@ namespace Chess
                                     for (var j = 0; j < 8 && flag; j++)
                                     {
                                         //Задаем фэйковое положение
-                                        var kingsFinishX = i;
-                                        var kingsFinishY = j;
-                                        ((Chessman) control).FakeLocation = new Point(kingsFinishX*50 + 27,
-                                            kingsFinishY*50 + 27);
+                                        var chessFinishX = i;
+                                        var chessFinishY = j;
+                                        ((Chessman) control).FakeLocation = new Point(chessFinishX*50 + 27,
+                                            chessFinishY*50 + 27);
 
-                                        if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                        if (chessFinishX != chessStartX || chessFinishY != chessStartY)
                                         {
                                             ((Chessman) control).FakeCheck = true;
-                                            result = Queen.CheckQueenMove(kingsStartX, kingsStartY, kingsFinishX,
-                                                kingsFinishY,
+                                            result = Queen.CheckQueenMove(chessStartX, chessStartY, chessFinishX,
+                                                chessFinishY,
                                                 fakeChessmanPresenceSign, controls, control, moveOrder);
                                             ((Chessman) control).FakeCheck = false;
 
@@ -396,13 +396,16 @@ namespace Chess
                                 {
                                     for (var j = 0; j < 8 && flag; j++)
                                     {
-                                        var kingsFinishX = i;
-                                        var kingsFinishY = j;
-                                        if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                        var chessFinishX = i;
+                                        var chessFinishY = j;
+                                        ((Chessman) control).FakeLocation = new Point(chessFinishX*50 + 27,
+                                            chessFinishY*50 + 27);
+
+                                        if (chessFinishX != chessStartX || chessFinishY != chessStartY)
                                         {
                                             ((Chessman) control).FakeCheck = true;
-                                            result = Castle.CheckCastleMove(kingsStartX, kingsStartY, kingsFinishX,
-                                                kingsFinishY,
+                                            result = Castle.CheckCastleMove(chessStartX, chessStartY, chessFinishX,
+                                                chessFinishY,
                                                 fakeChessmanPresenceSign, controls, control, moveOrder);
                                             ((Chessman) control).FakeCheck = false;
 
@@ -422,13 +425,16 @@ namespace Chess
                                 {
                                     for (var j = 0; j < 8 && flag; j++)
                                     {
-                                        var kingsFinishX = i;
-                                        var kingsFinishY = j;
-                                        if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                        var chessFinishX = i;
+                                        var chessFinishY = j;
+                                        ((Chessman) control).FakeLocation = new Point(chessFinishX*50 + 27,
+                                            chessFinishY*50 + 27);
+
+                                        if (chessFinishX != chessStartX || chessFinishY != chessStartY)
                                         {
                                             ((Chessman) control).FakeCheck = true;
-                                            result = Elephant.CheckElephantMove(kingsStartX, kingsStartY, kingsFinishX,
-                                                kingsFinishY,
+                                            result = Elephant.CheckElephantMove(chessStartX, chessStartY, chessFinishX,
+                                                chessFinishY,
                                                 fakeChessmanPresenceSign, controls, control, moveOrder);
                                             ((Chessman) control).FakeCheck = false;
 
@@ -449,13 +455,16 @@ namespace Chess
                                 {
                                     for (var j = 0; j < 8 && flag; j++)
                                     {
-                                        var kingsFinishX = i;
-                                        var kingsFinishY = j;
-                                        if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                        var chessFinishX = i;
+                                        var chessFinishY = j;
+                                        ((Chessman) control).FakeLocation = new Point(chessFinishX*50 + 27,
+                                            chessFinishY*50 + 27);
+
+                                        if (chessFinishX != chessStartX || chessFinishY != chessStartY)
                                         {
                                             ((Chessman) control).FakeCheck = true;
-                                            result = Horse.CheckHorseMove(kingsStartX, kingsStartY, kingsFinishX,
-                                                kingsFinishY,
+                                            result = Horse.CheckHorseMove(chessStartX, chessStartY, chessFinishX,
+                                                chessFinishY,
                                                 fakeChessmanPresenceSign, controls, control, moveOrder);
                                             ((Chessman) control).FakeCheck = false;
 
@@ -475,13 +484,16 @@ namespace Chess
                                 {
                                     for (var j = 0; j < 8 && flag; j++)
                                     {
-                                        var kingsFinishX = i;
-                                        var kingsFinishY = j;
-                                        if (kingsFinishX != kingsStartX || kingsFinishY != kingsStartY)
+                                        var chessFinishX = i;
+                                        var chessFinishY = j;
+                                        ((Chessman) control).FakeLocation = new Point(chessFinishX*50 + 27,
+                                            chessFinishY*50 + 27);
+
+                                        if (chessFinishX != chessStartX || chessFinishY != chessStartY)
                                         {
                                             ((Chessman) control).FakeCheck = true;
-                                            result = Pawn.CheckPawnMove(kingsStartX, kingsStartY, kingsFinishX,
-                                                kingsFinishY,
+                                            result = Pawn.CheckPawnMove(chessStartX, chessStartY, chessFinishX,
+                                                chessFinishY,
                                                 fakeChessmanPresenceSign, controls, control, moveOrder);
                                             ((Chessman) control).FakeCheck = false;
 

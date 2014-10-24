@@ -145,7 +145,7 @@ namespace Chess.Chessmans
                 }
 
                 //Проверка первого хода
-                if (!result)
+                if (!result && !((Pawn)sender).FakeCheck)
                 {
                     if (((Chessman)sender).FirstMove && ((Chessman)sender).FakeCheck)
                     {
@@ -162,8 +162,9 @@ namespace Chess.Chessmans
             }
 
             //Признак возможности превращения пешки
-            if (((Pawn)sender).ChessColor == "white" && finishY == 0 ||
-                     ((Pawn)sender).ChessColor == "black" && finishY == 7)
+            if ((((Pawn)sender).ChessColor == "white" && finishY == 0 ||
+                     ((Pawn)sender).ChessColor == "black" && finishY == 7) &&
+                        !((Pawn)sender).FakeCheck)
                 {
                     ((Pawn) sender).CanTransform = true;
                 }
