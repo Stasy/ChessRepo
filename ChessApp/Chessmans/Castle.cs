@@ -60,8 +60,8 @@ namespace Chess.Chessmans
                 controls.Add(TemporaryChassman);
             }
             ((Chessman)sender).RemoveChessman = false;
-           
-            //Проверка шаха
+
+            //Проверка шаха и мата
             if (!result && !((Chessman) sender).FakeCheck)
             {
                 CheckEnemyKingBeAttaced(startX, startY, finishX, finishY,
