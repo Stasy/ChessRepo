@@ -13,7 +13,10 @@ namespace Chess.Chessmans
     {
         public King(string color) : base(color, "King")
         {
+            CanCastling = true;
         }
+
+        private bool CanCastling { get; set; }
 
         private static readonly bool[] FlagForCheckDiagonalAttack = new bool[4];
 
@@ -37,9 +40,99 @@ namespace Chess.Chessmans
                 }
                 else
                 {
-                    if (Math.Abs(startX - finishX) != 1)
+                    //Проверка возможности рокировки
+                    if (Math.Abs(startX - finishX) == 2 && ((King) sender).CanCastling && ((Chessman) sender).FirstMove &&
+                        !((Chessman) sender).FakeCheck)
                     {
-                        result = true;
+                        if ((startX - finishX) < 0)
+                        {
+                            var res = false;
+                            res = CheckAllyKingBeAttacked(startX, startY, startX, startY, chessmanPresenceSign,
+                                controls,
+                                sender, res);
+                            res = CheckAllyKingBeAttacked(startX, startY, startX + 1, startY, chessmanPresenceSign,
+                                controls,
+                                sender, res);
+                            res = CheckAllyKingBeAttacked(startX, startY, startX + 2, startY, chessmanPresenceSign,
+                                controls,
+                                sender, res);
+
+                            if (!res)
+                            {
+                                for (var i = 1; startX + i < 8; i ++)
+                                {
+                                    if (!chessmanPresenceSign[startY, startX + i])
+                                    {
+                                        foreach (var control in controls)
+                                        {
+                                            if (control is Castle)
+                                            {
+                                                if (((Castle) control).ChessColor == ((Chessman) sender).ChessColor &&
+                                                    ((Castle) control).FirstMove && ((Castle) control).Location.X == 377)
+                                                {
+                                                    var startCasleX = (((Castle) control).Location.X - 27)/50;
+                                                    var startCastleY = (((Castle) control).Location.Y - 27)/50;
+                                                    chessmanPresenceSign[startCastleY, startCasleX] = false;
+                                                    chessmanPresenceSign[finishY, finishX - 1] = true;
+                                                    ((Castle) control).FirstMove = false;
+
+                                                    ((Castle) control).Location = new Point((finishX - 1)*50 + 27,
+                                                        (finishY)*50 + 27);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var res = false;
+                            res = CheckAllyKingBeAttacked(startX, startY, startX, startY, chessmanPresenceSign,
+                                controls,
+                                sender, res);
+                            res = CheckAllyKingBeAttacked(startX, startY, startX - 1, startY, chessmanPresenceSign,
+                                controls,
+                                sender, res);
+                            res = CheckAllyKingBeAttacked(startX, startY, startX - 2, startY, chessmanPresenceSign,
+                                controls,
+                                sender, res);
+
+                            if (!res)
+                            {
+                                for (var i = 1; startX - i >= 0; i++)
+                                {
+                                    if (!chessmanPresenceSign[startY, startX - i])
+                                    {
+                                        foreach (var control in controls)
+                                        {
+                                            if (control is Castle)
+                                            {
+                                                if (((Castle) control).ChessColor == ((Chessman) sender).ChessColor &&
+                                                    ((Castle) control).FirstMove && ((Castle) control).Location.X == 27)
+                                                {
+                                                    var startCasleX = (((Castle) control).Location.X - 27)/50;
+                                                    var startCastleY = (((Castle) control).Location.Y - 27)/50;
+                                                    chessmanPresenceSign[startCastleY, startCasleX] = false;
+                                                    chessmanPresenceSign[finishY, finishX - 1] = true;
+                                                    ((Castle) control).FirstMove = false;
+
+                                                    ((Castle) control).Location = new Point((finishX + 1)*50 + 27,
+                                                        (finishY)*50 + 27);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Math.Abs(startX - finishX) != 1)
+                        {
+                            result = true;
+                        }
                     }
                 }
             }
@@ -68,10 +161,10 @@ namespace Chess.Chessmans
                 {
                     if (control is Chessman)
                     {
-                        if (((Chessman)control).Location == ((Chessman)sender).Location &&
-                            ((Chessman)control).ChessColor != ((Chessman)sender).ChessColor)
+                        if (((Chessman) control).Location == ((Chessman) sender).Location &&
+                            ((Chessman) control).ChessColor != ((Chessman) sender).ChessColor)
                         {
-                            controls.Remove((Chessman)control);
+                            controls.Remove((Chessman) control);
                         }
                     }
                 }
